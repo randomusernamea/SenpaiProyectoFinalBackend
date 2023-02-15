@@ -1,7 +1,6 @@
-const {validationResult, body, check, param} = require("express-validator")
-SECRET_KEY="IENB(#HYie-igh*)Ihtgq10b"
-const jwt = require("jsonwebtoken")
-
+const { validationResult, body, check, param } = require("express-validator");
+SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
+const jwt = require("jsonwebtoken");
 
 exports.is1 = (req,res,next) => {
     if (req.loginInfo.permisos === 1){
@@ -11,7 +10,6 @@ exports.is1 = (req,res,next) => {
         res.status(403).json({error:"ACESS DENIED"})
     }
 }
-
 
 exports.verifyToken = (req,res,next) =>{
     const token = req.header('Authorization')
@@ -31,15 +29,29 @@ exports.verifyToken = (req,res,next) =>{
     }
 }
 
-exports.runValidate = (req,res,next) => {
-    const errors = validationResult(req)
-    if (!errors.isEmpty()){
-        return res.status(422).json({error: errors.array()[0].msg})
-    }
-    next();
-}
+exports.runValidate = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ error: errors.array()[0].msg });
+  }
+  next();
+};
 
 //Tiene que hacerse devuelta
 exports.correoValido = [body("correo").exists().withMessage("No hay usuario").isLength({max:20}).withMessage("Correo muy largo")]
-exports.passwordValido = [body("password").exists().withMessage("No hay password").isLength({max:63}).withMessage("Password muy largo")]
-exports.permisosValido = [body("permisos").exists().withMessage("No hay permisos").isFloat({min:1,max:3}).isInt().withMessage("El permiso tiene que ser un entero de valor 1, 2 o 3")]
+
+exports.passwordValido = [
+  body("password")
+    .exists()
+    .withMessage("No hay password")
+    .isLength({ max: 63 })
+    .withMessage("Username muy largo"),
+];
+exports.permisosValido = [
+  body("permisos")
+    .exists()
+    .withMessage("No hay permisos")
+    .isFloat({ min: 1, max: 3 })
+    .isInt()
+    .withMessage("El permiso tiene que ser un entero de valor 1, 2 o 3"),
+];
