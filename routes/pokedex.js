@@ -1,7 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-const { addPokemon, register, login } = require("../controllers/pokedex");
+const {
+  mostrarPokemones,
+  buscarPokemon, 
+  addPokemon,
+  register,
+  login,
+} = require("../controllers/pokedex");
+
 const {
   usuarioValido,
   passwordValido,
@@ -19,3 +26,8 @@ router.post(
   runValidate,
   register
 );
+
+router.get("/listaPokemones", mostrarPokemones);
+router.get("/listaPokemones/:id", buscarPokemon);
+
+module.exports = router;

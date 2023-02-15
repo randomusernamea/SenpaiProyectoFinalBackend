@@ -3,6 +3,28 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
 
+exports.mostrarPokemones = (req, res) => {
+  knex("Pokemones")
+    .then((resultado) => {
+      res.status(200).json(resultado);
+    })
+    .catch((error) => {
+      res.status(400).json({ error: error.message });
+    });
+};
+
+exports.buscarPokemon = (req, res) => {
+  const id = Number(req.params.id);
+  knex("Pokemones")
+    .where("id", id)
+    .then((resultado) => {
+      res.status(200).json(resultado);
+    })
+    .catch((error) => {
+      res.status(400).json({ error: error.message });
+    });
+};
+
 exports.login = (req, res) => {
   const { username, password } = req.body;
   knex("usuarios")
@@ -80,3 +102,4 @@ exports.addPokemon = (req, res) => {
       res.status(400).json({ error: error.message });
     });
 };
+
