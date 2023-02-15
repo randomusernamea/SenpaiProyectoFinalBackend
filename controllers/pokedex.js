@@ -77,3 +77,29 @@ exports.register = (req, res) => {
       }
     });
 };
+
+exports.addPokemon = (req, res) => {
+  const { tipo_id, nombre, foto, peso, altura, habilidad, descripcion } =
+    req.body;
+  knex("Pokemones")
+    .insert({
+      tipo_id: tipo_id,
+      nombre: nombre,
+      foto: foto,
+      peso: peso,
+      altura: altura,
+      habilidad: habilidad,
+      descripcion: descripcion,
+    })
+    .then(() => {
+      knex("Pokemones")
+        .select()
+        .then((pokemones) => {
+          res.status(200).json({ message: `Se agrego el pokemon ${nombre}` });
+        });
+    })
+    .catch((error) => {
+      res.status(400).json({ error: error.message });
+    });
+};
+
