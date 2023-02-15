@@ -39,6 +39,7 @@ exports.runValidate = (req,res,next) => {
     next();
 }
 
-exports.usuarioValido = [body("username").exists().withMessage("No hay usuario").isLength({max:20}).withMessage("Username muy largo")]
-exports.passwordValido = [body("password").exists().withMessage("No hay password").isLength({max:63}).withMessage("Username muy largo")]
+//Tiene que hacerse devuelta
+exports.correoValido = [body("correo").exists().withMessage("No hay usuario").isLength({max:20}).withMessage("Correo muy largo")]
+exports.passwordValido = [body("password").exists().withMessage("No hay password").isLength({max:63}).withMessage("Password muy largo")]
 exports.permisosValido = [body("permisos").exists().withMessage("No hay permisos").isFloat({min:1,max:3}).isInt().withMessage("El permiso tiene que ser un entero de valor 1, 2 o 3")]
