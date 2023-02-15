@@ -3,6 +3,16 @@ SECRET_KEY="IENB(#HYie-igh*)Ihtgq10b"
 const jwt = require("jsonwebtoken")
 
 
+exports.is1 = (req,res,next) => {
+    if (req.loginInfo.permisos === 1){
+        next()
+    }
+    else{
+        res.status(403).json({error:"ACESS DENIED"})
+    }
+}
+
+
 exports.verifyToken = (req,res,next) =>{
     const token = req.header('Authorization')
     if (!token){
