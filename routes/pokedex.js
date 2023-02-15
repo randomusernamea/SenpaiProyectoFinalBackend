@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
+const {register, login} = require('../controllers/pokedex')
+const {correoValido, passwordValido, permisosValido, runValidate} = require('../validators/middleware')
+
 const {
   mostrarPokemones,
   buscarPokemon, 
