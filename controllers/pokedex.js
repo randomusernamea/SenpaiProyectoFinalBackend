@@ -8,11 +8,14 @@ exports.login = (req,res) => {
     const {correo, password} = req.body;
     knex("Usuarios").select("*").where("correo", correo).then(
         function(data){
+            console.log(req.body)
             if(data.length != 1) {
                 res.status(400).json("Usuario o contrasena incorrectos")
             }
             const user = data[0]
-            const validPassword = bcrypt.compareSync(password, user.password)
+            console.log(user)
+            const validPassword = bcrypt.compareSync(password, user.clave)
+            console.log(validPassword)
             if (validPassword){
                 const token = jwt.sign({
                 correo: user.correo,permisos: user.permisos, date: Date.now()}, SECRET_KEY);
@@ -23,7 +26,6 @@ exports.login = (req,res) => {
     )
   }
   exports.register = (req,res) => {
-    console.log(req.body)
     let id = 0;
     let {correo, password, permisos, nombre} = req.body
       permisos = Number(permisos)
@@ -31,7 +33,7 @@ exports.login = (req,res) => {
       const passHash = bcrypt.hashSync(password, salt)
     knex("Usuarios").max("id").then(
         function(data){
-            id = data[0].max+1 || 1
+            id = data[0].max || 1
             knex("Usuarios").select("*").where("correo", correo).then(
                 function(data){
                     if (data.length != 0){
