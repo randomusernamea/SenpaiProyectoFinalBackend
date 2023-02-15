@@ -7,7 +7,7 @@ const pokedex = require("./routes/pokedex");
 
 require("dotenv").config();
 const app = express();
-app.use(morgan("dsev"));
+app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
