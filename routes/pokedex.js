@@ -1,8 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { mostrarPokemones, buscarPokemon } = require("../controllers/pokemon");
 
-const { register, login } = require("../controllers/pokedex");
+const {
+  mostrarPokemones,
+  buscarPokemon,
+  register,
+  login,
+} = require("../controllers/pokedex");
 const {
   usuarioValido,
   passwordValido,
