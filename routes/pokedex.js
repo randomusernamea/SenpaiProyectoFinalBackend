@@ -15,6 +15,7 @@ router.post("/tipo/nuevo", addTipoPokemon);
 //Routes Users
 router.post("/login", correoValido, passwordValido, runValidate, login);
 router.post("/logout", logout);
-router.post("/register", usuarioValido, correoValido, passwordValido, permisosValido, runValidate, register);
+router.post("/register", correoValido, correoValido, passwordValido, permisosValido, runValidate, register);
 
 
+module.exports = router
