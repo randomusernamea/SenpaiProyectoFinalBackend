@@ -53,6 +53,7 @@ exports.login = (req, res) => {
       }
     });
 };
+
 exports.register = (req, res) => {
   let { username, password, permisos } = req.body;
   permisos = Number(permisos);
