@@ -114,7 +114,7 @@ exports.login = async (req, res) => {
             const validPassword = bcrypt.compareSync(password, user.clave)
             if (validPassword) {
                 const token = jwt.sign({
-                    nombre: user.nombre, permisos: user.permisos, date: Date.now()
+                    correo: user.correo, nombre: user.nombre, permisos: user.permisos, date: Date.now()
                 }, SECRET_KEY);
                 res.status(200).json({ error: null, data: 'Login exitoso', token })
             }
