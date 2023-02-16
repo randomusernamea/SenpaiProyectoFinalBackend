@@ -104,14 +104,16 @@ exports.updatePokemon = async (req, res) => {
 
 
 exports.login = async (req, res) => {
-    const { correo, password } = req.body;
+
+    const { correo, clave } = req.body;
+    console.log(req.body)
     await knex("Usuarios").select("*").where("correo", correo).then(
         function (data) {
             if (data.length != 1) {
                 res.status(400).json("Usuario o contrasena incorrectos")
             }
             const user = data[0]
-            const validPassword = bcrypt.compareSync(password, user.clave)
+            const validPassword = bcrypt.compareSync(clave, user.clave)
             if (validPassword) {
                 const token = jwt.sign({
                     correo: user.correo, nombre: user.nombre, permisos: user.permisos, date: Date.now()
@@ -142,17 +144,23 @@ exports.register = async (req, res) => {
     permisos = Number(permisos)
     const salt = await bcrypt.genSaltSync(12)
     const passHash = await bcrypt.hashSync(clave, salt)
-    await knex("Usuarios").select("*").where("correo", correo).then(
-        function (data) {
-            if (data.length != 0) {
-                res.status(400).json({ error: "Usuario ya registrado" })
-            }
-            else {
-                knex("Usuarios").insert({ nombre: nombre, correo: correo, clave: passHash, permisos: permisos })
-                    .then(function (data) {
-                        res.status(200).send(data)
-                    })
-            }
-        }
+    knex("Usuarios").max("id").then(
+      function (datos){
+        knex("Usuarios").select("*").where("correo", correo).then(
+          function (data) {
+            console.log(data)
+              if (data.length != 0) {
+                  res.status(400).json({ error: "Usuario ya registrado" })
+              }
+              else {
+                  knex("Usuarios").insert({ id: datos[0].max + 1, nombre: nombre, correo: correo, clave: passHash, permisos: permisos })
+                      .then(function (data) {
+                          res.status(200).send(data)
+                      })
+              }
+          }
+      )
+      }
     )
+    
 }

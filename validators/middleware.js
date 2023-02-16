@@ -40,12 +40,12 @@ exports.runValidate = (req, res, next) => {
 //Tiene que hacerse devuelta
 exports.correoValido = [body("correo").exists().withMessage("No hay usuario").isLength({max:20}).withMessage("Correo muy largo")]
 
-exports.passwordValido = [
-  body("password")
+exports.claveValido = [
+  body("clave")
     .exists()
-    .withMessage("No hay password")
+    .withMessage("No hay clave")
     .isLength({ max: 63 })
-    .withMessage("Username muy largo"),
+    .withMessage("Clave muy larga"),
 ];
 exports.permisosValido = [
   body("permisos")
