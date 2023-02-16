@@ -103,3 +103,22 @@ exports.addPokemon = (req, res) => {
       res.status(400).json({ error: error.message });
     });
 };
+
+exports.deletePokemon = (req, res) => {
+  const id = req.params.id;
+  knex("Pokemones")
+    .where("id", id)
+    .del()
+    .then(() => {
+      knex("Pokemones")
+        .select()
+        .then((pokemones) => {
+          res
+            .status(200)
+            .json({ message: `Se elimino el pokemon ${id}`, pokemones });
+        });
+    })
+    .catch((error) => {
+      res.status(400).json({ error: error.message });
+    });
+};
