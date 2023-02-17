@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { register, login, mostrarPokemones, logout, addPokemon, updatePokemon, deletePokemon, addTipoPokemon, addEstadisticaPokemon, updateEstadistica } = require('../controllers/pokedex')
-const { usuarioValido, passwordValido, permisosValido, runValidate, correoValido, pokemonValidator, estadisticaValidator, tipoPokemonValidator } = require('../validators/middleware')
+const { correoValido, claveValido, permisosValido, runValidate, correoValido, pokemonValidator, estadisticaValidator, tipoPokemonValidator } = require('../validators/middleware')
 
 //Routes Pokemones
 router.get("/listaPokemones", mostrarPokemones);
@@ -14,8 +14,8 @@ router.put("/estadistica/editar", estadisticaValidator, runValidate, updateEstad
 router.post("/tipo/nuevo", tipoPokemonValidator, runValidate, addTipoPokemon);
 
 //Routes Users
-router.post("/login", correoValido, passwordValido, runValidate, login);
+router.post("/login", correoValido, claveValido, runValidate, login);
 router.post("/logout", logout);
-router.post("/register", usuarioValido, correoValido, passwordValido, permisosValido, runValidate, register);
+router.post("/register", correoValido, correoValido, claveValido, permisosValido, runValidate, register);
 
 
