@@ -34,6 +34,10 @@ exports.addPokemon = async (req, res) => {
         })
 }
 
+exports.updateEstadistica = (req,res) => {
+    
+}
+
 exports.addTipoPokemon = async (req, res) => {
     const tipo = req.body
     await knex("Tipos")
