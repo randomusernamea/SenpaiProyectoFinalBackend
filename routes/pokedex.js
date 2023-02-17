@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { register, login, mostrarPokemones, logout, addPokemon, updatePokemon, deletePokemon, addTipoPokemon, addEstadisticaPokemon, updateEstadistica } = require('../controllers/pokedex')
-const { correoValido, claveValido, permisosValido, runValidate, correoValido, pokemonValidator, estadisticaValidator, tipoPokemonValidator } = require('../validators/middleware')
+const { claveValido, permisosValido, runValidate, correoValido, pokemonValidator, estadisticaValidator, tipoPokemonValidator } = require('../validators/middleware')
 
 //Routes Pokemones
 router.get("/listaPokemones", mostrarPokemones);
