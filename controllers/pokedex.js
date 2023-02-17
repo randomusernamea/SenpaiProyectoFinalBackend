@@ -3,8 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
 
-exports.mostrarPokemones = async (req, res) => {
-    await knex("Pokemones")
+exports.mostrarPokemones =  (req, res) => {
+     knex("Pokemones")
         .join('tipos', 'pokemones.tipo_id', '=', 'tipos.id')
         .join('estadisticas', 'pokemones.id', '=', 'estadisticas.id')
         .then((resultado) => {
@@ -15,9 +15,9 @@ exports.mostrarPokemones = async (req, res) => {
         });
 };
 
-exports.addPokemon = async (req, res) => {
+exports.addPokemon =  (req, res) => {
     const pokemon = req.body
-    await knex("Pokemones")
+     knex("Pokemones")
         .insert({
             tipo_id: pokemon.id,
             nombre: pokemon.nombre,
@@ -38,9 +38,9 @@ exports.updateEstadistica = (req,res) => {
     
 }
 
-exports.addTipoPokemon = async (req, res) => {
+exports.addTipoPokemon =  (req, res) => {
     const tipo = req.body
-    await knex("Tipos")
+     knex("Tipos")
         .insert({
             id: tipo.id,
             nombre: tipo.nombre
@@ -53,9 +53,9 @@ exports.addTipoPokemon = async (req, res) => {
         })
 }
 
-exports.addEstadisticaPokemon = async (req, res) => {
+exports.addEstadisticaPokemon =  (req, res) => {
     const estadistica = req.body
-    await knex("Estadisticas")
+ knex("Estadisticas")
         .insert({
             id: estadistica.id,
             hp: estadistica.hp,
@@ -73,8 +73,8 @@ exports.addEstadisticaPokemon = async (req, res) => {
         })
 }
 
-exports.deletePokemon = async (req, res) => {
-    await knex("Pokemones")
+exports.deletePokemon =  (req, res) => {
+    knex("Pokemones")
         .where("id", Number(req.params.id))
         .del()
         .then(() => {
@@ -85,9 +85,9 @@ exports.deletePokemon = async (req, res) => {
         })
 }
 
-exports.updatePokemon = async (req, res) => {
+exports.updatePokemon = (req, res) => {
     const pokemon = req.body
-    await knex("Pokemones")
+    knex("Pokemones")
         .where("id", req.params.id)
         .update({
             tipo_id: pokemon.id,
