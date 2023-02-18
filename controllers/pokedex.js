@@ -17,18 +17,24 @@ exports.mostrarPokemones =  (req, res) => {
 
 exports.addPokemon =  (req, res) => {
     console.log(req.body)
-    const pokemon = req.body
+    let pokemon = req.body
+    pokemon.height = Number(pokemon.height.slice(0, pokemon.height.lenght-1).replace(",", "."))
+    pokemon.weight = Number(pokemon.weight.slice(0, pokemon.weight.lenght-1).replace(",", "."))
     habilidades = pokemon.abilities.split("/")
+
      knex("Pokemones")
         .insert({
+            id: pokemon.id,
             tipo_id: pokemon.id,
             nombre: pokemon.nombre,
+            foto: pokemon.img,
             peso: pokemon.weight,
             altura: pokemon.height,
-            habilidad: habilidades[0], //todo Cambiar por habilidades cuando este en la base de datos
+            habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
             descripcion: pokemon.descripcion,
         })
         .then(() => {
+            console.log("entro 1")
             
             knex("Estadisticas")
             .insert({
@@ -41,12 +47,14 @@ exports.addPokemon =  (req, res) => {
                 spd: pokemon.stats.spd
             })
             .then(() => {
+                console.log("entro 2")
                 knex("Tipos")
                     .insert({
                         id: pokemon.id,
                         nombre: pokemon.tipo1
                     })
                     .then(() => {
+                        console.log("entro 3")
                         res.status(200).json({ error: null, data: "Se agrego correctamente", tipo })
                     })
                     .catch((error) => {
@@ -59,7 +67,8 @@ exports.addPokemon =  (req, res) => {
             })
         })
         .catch((error) => {
-            res.status(400).json({ error: error.message })
+            console.log(error)
+            res.status(400).json("ASDASDSAD")
         })
 }
 

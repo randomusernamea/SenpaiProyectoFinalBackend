@@ -12,15 +12,7 @@ exports.is1 = (req,res,next) => {
     }
 }
 
-//todo
-exports.pokemonHeightValido = (req,res,next) =>{
-    next()
-}
 
-//todo
-exports.pokemonWeightValido = (req,res,next) =>{
-    next()
-}
 exports.pokemonTipoValido = (req,res,next) =>{
     const {tipo1, tipo2} = req.body;
     if ((!esTipo(tipo1)) || (tipo2 && !esTipo(tipo2))){
@@ -53,6 +45,7 @@ exports.verifyToken = (req,res,next) =>{
 exports.runValidate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log(errors.array()[0].msg)
     return res.status(422).json({ error: errors.array()[0].msg });
   }
   next();
@@ -84,6 +77,25 @@ exports.pokemonNombreValido = [
         .withMessage("Los nombres solo pueden contener letras")
         .isLength({min:1, max: 30})
         .withMessage("Nombre muy largo")
+]
+//Needs testing
+exports.pokemonHeightValido = [
+    body("height")
+        .exists()
+        .withMessage("No hay height")
+        .matches(/^[0-9]+[,]+[0-9]+[m]$/g)
+        .withMessage("Height tiene que ser un numero positivo hasta 2000 y terminar en m")
+     
+]
+
+//Needs testing
+exports.pokemonWeightValido = [
+    body("weight")
+        .exists()
+        .withMessage("No hay weight")
+        .matches(/^[0-9]+[,]+[0-9]+[k]+[g]$/g)
+        .withMessage("Weight tiene que ser un numero positivo hasta 2000 y terminar en kg")
+     
 ]
 
 exports.pokemonIdValido = [
