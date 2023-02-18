@@ -2,12 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 const { register, login, mostrarPokemones, logout, addPokemon, updatePokemon, deletePokemon, addTipoPokemon, addEstadisticaPokemon, updateEstadistica } = require('../controllers/pokedex')
-const { claveValido, permisosValido, runValidate, correoValido, pokemonValidator, estadisticaValidator, tipoPokemonValidator } = require('../validators/middleware')
+const { pokemonHeightValido, pokemonWeightValido, pokemonTipoValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHpValido, pokemonIdValido, pokemonNombreValido, claveValido, permisosValido, runValidate, correoValido, pokemonValidator, estadisticaValidator, tipoPokemonValidator } = require('../validators/middleware')
 
 //Routes Pokemones
 router.get("/listaPokemones", mostrarPokemones);
-router.post("/pokemon/nuevo", /*pokemonValidator,*/ runValidate, addPokemon);
-router.put("/pokemon/editar", /*pokemonValidator,*/ runValidate, updatePokemon);
+router.post("/pokemon/nuevo", pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido,runValidate, pokemonTipoValido,pokemonHeightValido, pokemonWeightValido,  addPokemon);
+router.put("/pokemon/editar", pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido,runValidate, pokemonTipoValido,pokemonHeightValido, pokemonWeightValido,  updatePokemon);
 router.delete("/pokemon/eliminar/:id", deletePokemon);
 router.post("/estadistica/nuevo", /*estadisticaValidator,*/ runValidate, addEstadisticaPokemon);
 router.put("/estadistica/editar", /*estadisticaValidator,*/ runValidate, updateEstadistica);
