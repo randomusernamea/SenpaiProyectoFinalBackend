@@ -6,8 +6,8 @@ const { pokemonHeightValido, pokemonWeightValido, pokemonTipoValido, pokemonAtkV
 
 //Routes Pokemones
 router.get("/listaPokemones", mostrarPokemones);
-router.post("/pokemon/nuevo", pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido,runValidate, pokemonTipoValido,pokemonHeightValido, pokemonWeightValido,  addPokemon);
-router.put("/pokemon/editar", pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido,runValidate, pokemonTipoValido,pokemonHeightValido, pokemonWeightValido,  updatePokemon);
+router.post("/pokemon/nuevo", pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido,runValidate, pokemonTipoValido,  addPokemon);
+router.put("/pokemon/editar", pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido,runValidate, pokemonTipoValido, updatePokemon);
 router.delete("/pokemon/eliminar/:id", deletePokemon);
 router.post("/estadistica/nuevo", /*estadisticaValidator,*/ runValidate, addEstadisticaPokemon);
 router.put("/estadistica/editar", /*estadisticaValidator,*/ runValidate, updateEstadistica);
