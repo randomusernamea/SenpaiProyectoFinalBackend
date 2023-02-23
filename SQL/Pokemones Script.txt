@@ -1,0 +1,25 @@
+-- Table: public.Pokemones
+
+-- DROP TABLE IF EXISTS public."Pokemones";
+
+CREATE TABLE IF NOT EXISTS public."Pokemones"
+(
+    id integer NOT NULL,
+    nombre character varying COLLATE pg_catalog."default" NOT NULL,
+    foto character varying COLLATE pg_catalog."default" NOT NULL,
+    peso double precision NOT NULL,
+    altura double precision NOT NULL,
+    habilidad character varying[] COLLATE pg_catalog."default" NOT NULL,
+    descripcion character varying COLLATE pg_catalog."default" NOT NULL,
+    tipo_id integer[] NOT NULL,
+    CONSTRAINT "Pokemones_pkey" PRIMARY KEY (id),
+    CONSTRAINT fk_estadistica FOREIGN KEY (id)
+        REFERENCES public."Estadisticas" (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Pokemones"
+    OWNER to postgres;

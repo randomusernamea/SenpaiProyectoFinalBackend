@@ -23,8 +23,8 @@ router.get("/listaPokemones", mostrarPokemones);
 router.post("/pokemon/nuevo", pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido,runValidate, pokemonTipoValido, imagenNoExiste, upload.single('imagen'), addPokemon);
 router.put("/pokemon/editar", pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido,runValidate, pokemonTipoValido, imagenExiste, upload.single('imagen'), updatePokemon);
 router.delete("/pokemon/eliminar/:id", deletePokemon);
-router.post("/tipos/nuevo", addTipo)
-router.put("/tipos/editar", updateTipo)
+router.post("/tipos/nuevo", pokemonTipoValido, addTipo)
+router.put("/tipos/editar", pokemonTipoValido, updateTipo)
 
 
 //Routes Users

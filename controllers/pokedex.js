@@ -242,8 +242,7 @@ exports.addTipo = (req,res) => {
     .then(() => {   
         res.status(200).json({error: "No errors"})
     })
-    .catch((error) => {
-        anyErrors = true;
+    .catch((error) => { 
         res.status(400).json({ error: error.message })
     })
 }
