@@ -12,6 +12,27 @@ exports.is1 = (req,res,next) => {
     }
 }
 
+exports.imagenNoExiste = (req,res,next) => {
+    //Arreglar Path?
+    let path = "../Imagenes/" + req.body.id
+    //Arreglar linea
+    req.body.imagen.nombre = req.body.id
+    if (fs.existsSync(path)) {
+        res.status(400).json({error:"Archivo ya existe"})
+      }
+    next()
+}
+
+exports.imagenExiste = (req,res,next) => {
+        //Arreglar Path?
+        let path = "../Imagenes/" + req.body.id
+        //Arreglar linea
+        req.body.imagen.nombre = req.body.id
+    if (!fs.existsSync(path)) {
+        res.status(400).json({error:"Archivo ya existe"})
+      }
+    next()
+}
 
 exports.pokemonTipoValido = (req,res,next) =>{
     const {tipo1, tipo2} = req.body;
