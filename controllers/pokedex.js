@@ -3,6 +3,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
 
+
+
+
+
 exports.mostrarPokemones =  (req, res) => {
      knex("Pokemones")
         .join('tipos', 'pokemones.tipo_id', '=', 'tipos.id')
@@ -15,7 +19,11 @@ exports.mostrarPokemones =  (req, res) => {
         });
 };
 
-exports.addPokemon =  (req, res) => {
+exports.subirImagen = (req,res) => {
+    res.status(200).json({'error': 'none'})
+}
+
+exports.addPokemon =  (req, res) => {       
     console.log(req.body)
     let pokemon = req.body
     pokemon.height = Number(pokemon.height.slice(0, pokemon.height.lenght-1).replace(",", "."))
@@ -56,7 +64,7 @@ exports.addPokemon =  (req, res) => {
                         habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
                         descripcion: pokemon.descripcion,
                     })
-                    .then(() => {
+                    .then(() => {   
                         console.log("entro 3")
                     })
                     .catch((error) => {
