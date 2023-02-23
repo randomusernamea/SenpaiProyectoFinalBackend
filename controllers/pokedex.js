@@ -3,17 +3,22 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
 
-exports.mostrarPokemones = (req, res) => {
-  knex("Pokemones")
-    .join("tipos", "pokemones.tipo_id", "=", "tipos.id")
-    .join("estadisticas", "pokemones.id", "=", "estadisticas.id")
-    .then((resultado) => {
-      res.status(200).json(resultado);
-    })
-    .catch((error) => {
-      res.status(400).json({ error: error.message });
-    });
+exports.mostrarPokemones =  (req, res) => {
+     knex("Pokemones")
+        .join('tipos', 'pokemones.tipo_id', '=', 'tipos.id')
+        .join('estadisticas', 'pokemones.id', '=', 'estadisticas.id')
+        .then((resultado) => {
+            res.status(200).json(resultado);
+        })
+        .catch((error) => {
+            res.status(400).json({ error: error.message });
+        });
 };
+
+exports.subirImagen = (req,res) => {
+    res.status(200).json({'error': 'none'})
+}
+
 
 exports.addPokemon = (req, res) => {
   console.log(req.body);
@@ -25,6 +30,67 @@ exports.addPokemon = (req, res) => {
     pokemon.weight.slice(0, pokemon.weight.lenght - 1).replace(",", ".")
   );
   habilidades = pokemon.abilities.split("/");
+  pokemon.tipos = []
+  console.log(pokemon.tipos)
+  pokemon.tipos.push(pokemon.tipo1)
+  if (pokemon.tipo2) {pokemon.tipos.push(pokemon.tipo2)}
+   let anyErrors = false;
+   knex("Estadisticas")
+     .insert({
+        id: pokemon.id,
+        hp: pokemon.stats.hp,
+        atk: pokemon.stats.atk,
+        def: pokemon.stats.def,
+        satk: pokemon.stats.satk,
+        sdef: pokemon.stats.sdef,
+        spd: pokemon.stats.spd
+    })
+        .then(() => {
+            console.log("entro 1")
+            knex("Tipos")
+                    .insert({
+                        id: pokemon.id,
+                        nombre: pokemon.tipos
+                    })
+            .then(() => {
+                console.log("entro 2")
+                knex("Pokemones")
+                    .insert({
+                        id: pokemon.id,
+                        tipo_id: pokemon.id,
+                        nombre: pokemon.nombre,
+                        foto: pokemon.img,
+                        peso: pokemon.weight,
+                        altura: pokemon.height,
+                        habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
+                        descripcion: pokemon.descripcion,
+                    })
+                    .then(() => {   
+                        console.log("entro 3")
+                    })
+                    .catch((error) => {
+                        anyErrors = true;
+                        res.status(400).json({ error: error.message })
+                    })
+                
+            })
+            .catch((error) => {
+                anyErrors = true;
+                console.log(error)
+                res.status(400).json({ error: error.message })
+            })
+            if (!anyErrors){
+                res.status(200).json({ error: null, data: "Se agrego correctamente", pokemon })
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+            res.status(400).json("ASDASDSAD")
+        })
+        if (anyErrors){
+            res.status(400).json({error: "Uncatchted error"})
+        }
+}
 
   pokemon.tipos = [];
   console.log(pokemon.tipos);
