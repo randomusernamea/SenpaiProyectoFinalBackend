@@ -2,6 +2,7 @@ const knex = require("../knexfile");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
+const tipoANumero = require("../Utilities/Utilities")
 
 exports.mostrarPokemones =  (req, res) => {
      knex("Pokemones")
@@ -19,7 +20,6 @@ exports.subirImagen = (req,res) => {
     res.status(200).json({'error': 'none'})
 }
 
-
 exports.addPokemon = (req, res) => {
   console.log(req.body);
   let pokemon = req.body;
@@ -32,8 +32,8 @@ exports.addPokemon = (req, res) => {
   habilidades = pokemon.abilities.split("/");
   pokemon.tipos = []
   console.log(pokemon.tipos)
-  pokemon.tipos.push(pokemon.tipo1)
-  if (pokemon.tipo2) {pokemon.tipos.push(pokemon.tipo2)}
+  pokemon.tipos.push(tipoANumero(pokemon.tipo1))
+  if (pokemon.tipo2) {pokemon.tipos.push(tipoANumero(pokemon.tipo2))}
    let anyErrors = false;
    knex("Estadisticas")
      .insert({
@@ -45,14 +45,7 @@ exports.addPokemon = (req, res) => {
         sdef: pokemon.stats.sdef,
         spd: pokemon.stats.spd
     })
-        .then(() => {
-            console.log("entro 1")
-            knex("Tipos")
-                    .insert({
-                        id: pokemon.id,
-                        nombre: pokemon.tipos
-                    })
-            .then(() => {
+          .then(() => {
                 console.log("entro 2")
                 knex("Pokemones")
                     .insert({
@@ -72,13 +65,6 @@ exports.addPokemon = (req, res) => {
                         anyErrors = true;
                         res.status(400).json({ error: error.message })
                     })
-                
-            })
-            .catch((error) => {
-                anyErrors = true;
-                console.log(error)
-                res.status(400).json({ error: error.message })
-            })
             if (!anyErrors){
                 res.status(200).json({ error: null, data: "Se agrego correctamente", pokemon })
             }
@@ -92,7 +78,6 @@ exports.addPokemon = (req, res) => {
         }
 }
 
-
 exports.updatePokemon = (req, res) => {
   const pokemon = req.body;
   pokemon.height = Number(
@@ -105,9 +90,9 @@ exports.updatePokemon = (req, res) => {
 
   pokemon.tipos = [];
   console.log(pokemon.tipos);
-  pokemon.tipos.push(pokemon.tipo1);
+  pokemon.tipos.push(tipoANumero(pokemon.tipo1));
   if (pokemon.tipo2) {
-    pokemon.tipos.push(pokemon.tipo2);
+    pokemon.tipos.push(tipoANumero(pokemon.tipo2));
   }
   let anyErrors = false;
 
@@ -121,37 +106,26 @@ exports.updatePokemon = (req, res) => {
       sdef: pokemon.stats.sdef,
       spd: pokemon.stats.spd,
     })
+    .where(id, pokemon.id)
     .then(() => {
-      console.log("entro 1");
-      knex("Tipos")
+      console.log("entro 2");
+      knex("Pokemones")
         .update({
           id: pokemon.id,
-          nombre: pokemon.tipos,
+          tipo_id: pokemon.tipos,
+          nombre: pokemon.nombre,
+          foto: pokemon.img,
+          peso: pokemon.weight,
+          altura: pokemon.height,
+          habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
+          descripcion: pokemon.descripcion,
         })
+        .where(id, pokemon.id)
         .then(() => {
-          console.log("entro 2");
-          knex("Pokemones")
-            .update({
-              id: pokemon.id,
-              tipo_id: pokemon.id,
-              nombre: pokemon.nombre,
-              foto: pokemon.img,
-              peso: pokemon.weight,
-              altura: pokemon.height,
-              habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
-              descripcion: pokemon.descripcion,
-            })
-            .then(() => {
-              console.log("entro 3");
-            })
-            .catch((error) => {
-              anyErrors = true;
-              res.status(400).json({ error: error.message });
-            });
+          console.log("entro 3");
         })
         .catch((error) => {
           anyErrors = true;
-          console.log(error);
           res.status(400).json({ error: error.message });
         });
       if (!anyErrors) {
@@ -257,3 +231,35 @@ exports.register = async (req, res) => {
         });
     });
 };
+
+exports.addTipo = (req,res) => {
+  let tipo = req.body;
+  knex("Tipos")
+    .insert({
+        id: tipo.id,
+        nombre: tipo.nombre
+    })
+    .then(() => {   
+        res.status(200).json({error: "No errors"})
+    })
+    .catch((error) => { 
+        res.status(400).json({ error: error.message })
+    })
+}
+
+exports.updateTipo = (req,res) => {
+  let tipo = req.body;
+  knex("Tipos")
+    .update({
+        id: tipo.id,
+        nombre: tipo.nombre
+    })
+    .where(id, tipo.id)
+    .then(() => {   
+        res.status(200).json({error: "No errors"})
+    })
+    .catch((error) => {
+        anyErrors = true;
+        res.status(400).json({ error: error.message })
+    })
+}
