@@ -21,6 +21,7 @@ exports.subirImagen = (req,res) => {
 }
 
 exports.addPokemon = (req, res) => {
+  console.log(req.body)
   let pokemon = req.body;
   pokemon.height = parseFloat(String(pokemon.height).slice(0, pokemon.height.length-1).replace(",","."))
   pokemon.weight = parseFloat(String(pokemon.weight).slice(0, pokemon.weight.length-2).replace(",","."))
@@ -38,34 +39,30 @@ exports.addPokemon = (req, res) => {
         sdef: pokemon.stats.sdef,
         spd: pokemon.stats.spd
     })
-          .then(() => {
-                console.log("entro 2")
-                knex("Pokemones")
-                    .insert({
-                        id: Number(pokemon.id),
-                        tipo_id: pokemon.tipos,
-                        nombre: pokemon.nombre,
-                        foto: "",
-                        peso: pokemon.weight,
-                        altura: pokemon.height,
-                        habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
-                        descripcion: "pokemon.descripcion",
-                    })
-                    .then(() => {   
-                        console.log("entro 3")
-                        res.status(200).json({ error: null, data: "Se agrego correctamente", pokemon })
-                    })
-                    .catch((error) => {
-                        res.status(400).json({ error: error.message })
-                    })
-        })
-        .catch((error) => {
-            console.log(error)
-            res.status(400).json("ASDASDSAD")
-        })
-
-    res.status(400).json({error: "Uncatchted error"})
-
+    .then(() => {
+      knex("Pokemones")
+          .insert({
+              id: Number(pokemon.id),
+              tipo_id: pokemon.tipos,
+              nombre: pokemon.nombre,
+              foto: "",
+              peso: pokemon.weight,
+              altura: pokemon.height,
+              habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
+              descripcion: "pokemon.descripcion",
+          })
+          .then(() => {   
+              console.log("entro 3")
+              res.status(200).json({ error: null, data: "Se agrego correctamente", pokemon })
+          })
+          .catch((error) => {
+              res.status(400).json({ error: error.message })
+          })
+    })
+    .catch((error) => {
+        console.log(error)
+        res.status(400).json("ASDASDSAD")
+    })
 }
 
 exports.updatePokemon = (req, res) => {
