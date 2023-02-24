@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const { register, login, logout} = require('../controllers/pokedex')
-const { claveValido, permisosValido, runValidate, correoValido } = require('../validators/middleware')
+const { register, login, logout} = require('../controllers/login')
+const { claveValido, permisosValido, correoValido } = require('../validators/login')
+const {runValidate} = require('../validators/middleware')
 
 
 

@@ -126,7 +126,6 @@ exports.deletePokemon = (req, res) => {
     });
 };
 
-
 exports.addTipo = (req,res) => {
   let tipo = req.body;
   knex("Tipos")
