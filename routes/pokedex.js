@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { addTipo, updateTipo, register, login, mostrarPokemones, logout, addPokemon, updatePokemon, deletePokemon, addTipoPokemon, addEstadisticaPokemon, updateEstadistica } = require('../controllers/pokedex')
+const { addTipo, updateTipo, mostrarPokemones, addPokemon, updatePokemon, deletePokemon, addTipoPokemon, addEstadisticaPokemon, updateEstadistica } = require('../controllers/pokedex')
 const { pokemonHeightValido, pokemonWeightValido, pokemonTipoValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHpValido, pokemonIdValido, pokemonNombreValido, claveValido, permisosValido, runValidate, correoValido, imagenExiste, imagenNoExiste, pokemonValidator, estadisticaValidator, tipoPokemonValidator } = require('../validators/middleware')
 
 //Multer
@@ -28,9 +28,7 @@ router.put("/tipos/editar", pokemonTipoValido, updateTipo)
 
 
 //Routes Users
-router.post("/login", correoValido, claveValido, runValidate, login);
-router.post("/logout", logout);
-router.post("/register", correoValido, correoValido, claveValido, permisosValido, runValidate, register);
+
 
 
 module.exports = router
