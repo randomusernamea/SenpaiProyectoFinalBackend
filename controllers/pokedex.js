@@ -28,7 +28,6 @@ exports.addPokemon = (req, res) => {
   pokemon.tipos = []
   pokemon.tipos.push(tipoANumero(pokemon.tipo1))
   if (pokemon.tipo2) {pokemon.tipos.push(tipoANumero(pokemon.tipo2))}
-   let anyErrors = false;
    knex("Estadisticas")
      .insert({
         id: pokemon.id,
@@ -57,9 +56,6 @@ exports.addPokemon = (req, res) => {
                         res.status(200).json({ error: null, data: "Se agrego correctamente", pokemon })
                     })
                     .catch((error) => {
-                        anyErrors = true;
-                        console.log(error)
-                        console.log("ASDASDSAD")
                         res.status(400).json({ error: error.message })
                     })
         })
@@ -67,28 +63,21 @@ exports.addPokemon = (req, res) => {
             console.log(error)
             res.status(400).json("ASDASDSAD")
         })
-        if (anyErrors){
-            res.status(400).json({error: "Uncatchted error"})
-        }
+
+    res.status(400).json({error: "Uncatchted error"})
+
 }
 
 exports.updatePokemon = (req, res) => {
   const pokemon = req.body;
-  pokemon.height = Number(
-    pokemon.height.slice(0, pokemon.height.lenght - 1).replace(",", ".")
-  );
-  pokemon.weight = Number(
-    pokemon.weight.slice(0, pokemon.weight.lenght - 1).replace(",", ".")
-  );
+  pokemon.height = parseFloat(String(pokemon.height).slice(0, pokemon.height.length-1).replace(",","."))
+  pokemon.weight = parseFloat(String(pokemon.weight).slice(0, pokemon.weight.length-2).replace(",","."))
   habilidades = pokemon.abilities.split("/");
-
   pokemon.tipos = [];
-  console.log(pokemon.tipos);
   pokemon.tipos.push(tipoANumero(pokemon.tipo1));
   if (pokemon.tipo2) {
     pokemon.tipos.push(tipoANumero(pokemon.tipo2));
   }
-  let anyErrors = false;
 
   knex("Estadisticas")
     .update({
@@ -117,24 +106,18 @@ exports.updatePokemon = (req, res) => {
         .where(id, pokemon.id)
         .then(() => {
           console.log("entro 3");
-        })
-        .catch((error) => {
-          anyErrors = true;
-          res.status(400).json({ error: error.message });
-        });
-      if (!anyErrors) {
-        res
+          res
           .status(200)
           .json({ error: null, data: "Se agrego correctamente", pokemon });
-      }
+        })
+        .catch((error) => {
+          res.status(400).json({ error: error.message });
+        });
     })
     .catch((error) => {
       console.log(error);
       res.status(400).json("ASDASDSAD");
     });
-  if (anyErrors) {
-    res.status(400).json({ error: "Uncatchted error" });
-  }
 };
 
 exports.deletePokemon = (req, res) => {
@@ -253,7 +236,6 @@ exports.updateTipo = (req,res) => {
         res.status(200).json({error: "No errors"})
     })
     .catch((error) => {
-        anyErrors = true;
         res.status(400).json({ error: error.message })
     })
 }   
