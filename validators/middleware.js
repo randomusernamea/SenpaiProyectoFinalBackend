@@ -74,7 +74,6 @@ exports.runValidate = (req, res, next) => {
   next();
 };
 
-//Tiene que hacerse devuelta
 exports.correoValido = [body("correo").exists().withMessage("No hay usuario").isLength({max:20}).withMessage("Correo muy largo")]
 
 exports.claveValido = [
