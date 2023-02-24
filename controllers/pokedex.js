@@ -2,7 +2,7 @@ const knex = require("../knexfile");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
-const tipoANumero = require("../Utilities/Utilities")
+const {tipoANumero}    = require("../Utilities/Utilities")
 
 exports.mostrarPokemones =  (req, res) => {
      knex("Pokemones")
@@ -21,17 +21,11 @@ exports.subirImagen = (req,res) => {
 }
 
 exports.addPokemon = (req, res) => {
-  console.log(req.body);
   let pokemon = req.body;
-  pokemon.height = Number(
-    pokemon.height.slice(0, pokemon.height.lenght - 1).replace(",", ".")
-  );
-  pokemon.weight = Number(
-    pokemon.weight.slice(0, pokemon.weight.lenght - 1).replace(",", ".")
-  );
+  pokemon.height = parseFloat(String(pokemon.height).slice(0, pokemon.height.length-1).replace(",","."))
+  pokemon.weight = parseFloat(String(pokemon.weight).slice(0, pokemon.weight.length-2).replace(",","."))
   habilidades = pokemon.abilities.split("/");
   pokemon.tipos = []
-  console.log(pokemon.tipos)
   pokemon.tipos.push(tipoANumero(pokemon.tipo1))
   if (pokemon.tipo2) {pokemon.tipos.push(tipoANumero(pokemon.tipo2))}
    let anyErrors = false;
@@ -49,25 +43,25 @@ exports.addPokemon = (req, res) => {
                 console.log("entro 2")
                 knex("Pokemones")
                     .insert({
-                        id: pokemon.id,
-                        tipo_id: pokemon.id,
+                        id: Number(pokemon.id),
+                        tipo_id: pokemon.tipos,
                         nombre: pokemon.nombre,
-                        foto: pokemon.img,
+                        foto: "",
                         peso: pokemon.weight,
                         altura: pokemon.height,
                         habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
-                        descripcion: pokemon.descripcion,
+                        descripcion: "pokemon.descripcion",
                     })
                     .then(() => {   
                         console.log("entro 3")
+                        res.status(200).json({ error: null, data: "Se agrego correctamente", pokemon })
                     })
                     .catch((error) => {
                         anyErrors = true;
+                        console.log(error)
+                        console.log("ASDASDSAD")
                         res.status(400).json({ error: error.message })
                     })
-            if (!anyErrors){
-                res.status(200).json({ error: null, data: "Se agrego correctamente", pokemon })
-            }
         })
         .catch((error) => {
             console.log(error)
@@ -262,4 +256,4 @@ exports.updateTipo = (req,res) => {
         anyErrors = true;
         res.status(400).json({ error: error.message })
     })
-}
+}   

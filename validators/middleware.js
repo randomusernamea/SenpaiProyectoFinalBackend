@@ -1,9 +1,10 @@
 const { validationResult, body, check, param } = require("express-validator");
 SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
 const jwt = require("jsonwebtoken");
-const {esTipo} = require("../Utilities/Utilities")
-
-exports.is1 = (req,res,next) => {
+const {esTipo, tipoANumero} = require("../Utilities/Utilities")
+var fs = require('fs');
+    
+exports.is1 = (req,res,next) => {  
     if (req.loginInfo.permisos === 1){
         next()
     }
@@ -16,7 +17,8 @@ exports.imagenNoExiste = (req,res,next) => {
     //Arreglar Path?
     let path = "../Imagenes/" + req.body.id
     //Arreglar linea
-    req.body.imagen.nombre = req.body.id
+    console.log(req.body.img)
+    req.body.img.nombre = req.body.id
     if (fs.existsSync(path)) {
         res.status(400).json({error:"Archivo ya existe"})
       }
@@ -27,7 +29,7 @@ exports.imagenExiste = (req,res,next) => {
         //Arreglar Path?
         let path = "../Imagenes/" + req.body.id
         //Arreglar linea
-        req.body.imagen.nombre = req.body.id
+        req.body.img.nombre = req.body.id
     if (!fs.existsSync(path)) {
         res.status(400).json({error:"Archivo ya existe"})
       }
