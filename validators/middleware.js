@@ -14,14 +14,11 @@ exports.is1 = (req,res,next) => {
 }
 
 exports.imagenNoExiste = (req,res,next) => {
-    //Arreglar Path?
-    let path = "../Imagenes/" + req.body.id
-    //Arreglar linea
-    console.log(req.body.img)
-    req.body.img.nombre = req.body.id
+    console.log(req.body.imagen)
+    /*let path = "../Imagenes/" + req.body.get()
     if (fs.existsSync(path)) {
         res.status(400).json({error:"Archivo ya existe"})
-      }
+      }*/
     next()
 }
 
