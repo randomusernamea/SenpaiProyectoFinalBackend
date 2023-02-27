@@ -1,21 +1,37 @@
 const knex = require("../knexfile");
-const {tipoANumero}    = require("../Utilities/Utilities")
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
+const {tipoANumero} = require("../Utilities/Utilities")
 
-exports.mostrarPokemones =  (req, res) => {
-     knex("Pokemones")
-        .join('tipos', 'pokemones.tipo_id', '=', 'tipos.id')
-        .join('estadisticas', 'pokemones.id', '=', 'estadisticas.id')
-        .then((resultado) => {
-            res.status(200).json(resultado);
-        })
-        .catch((error) => {
-            res.status(400).json({ error: error.message });
-        });
+exports.mostrarPokemones = (req, res) => {
+  knex("Pokemones")
+    .join("tipos", "pokemones.tipo_id", "=", "tipos.id")
+    .join("estadisticas", "pokemones.id", "=", "estadisticas.id")
+    .then((resultado) => {
+      res.status(200).json(resultado);
+    })
+    .catch((error) => {
+      res.status(400).json({ error: error.message });
+    });
 };
 
-exports.subirImagen = (req,res) => {
-    res.status(200).json({'error': 'none'})
-}
+exports.mostrarPokemonId = (req, res) => {
+  knex("Pokemones")
+    .where("id", Number(req.params.id))
+    .join("tipos", "pokemones.tipo_id", "=", "tipos.id")
+    .join("estadisticas", "pokemones.id", "=", "estadisticas.id")
+    .then((resultado) => {
+      res.status(200).json(resultado);
+    })
+    .catch((error) => {
+      res.status(400).json({ error: error.message });
+    });
+};
+
+exports.subirImagen = (req, res) => {
+  res.status(200).json({ error: "none" });
+};
 
 exports.addPokemon = (req, res) => {
   console.log(req.body)
@@ -23,6 +39,7 @@ exports.addPokemon = (req, res) => {
   pokemon.height = parseFloat(String(pokemon.height).slice(0, pokemon.height.length-1).replace(",","."))
   pokemon.weight = parseFloat(String(pokemon.weight).slice(0, pokemon.weight.length-2).replace(",","."))
   habilidades = pokemon.abilities.split("/");
+
   pokemon.tipos = []
   pokemon.tipos.push(tipoANumero(pokemon.tipo1))
   if (pokemon.tipo2) {pokemon.tipos.push(tipoANumero(pokemon.tipo2))}
@@ -61,6 +78,7 @@ exports.addPokemon = (req, res) => {
         res.status(400).json("ASDASDSAD")
     })
 }
+
 
 exports.updatePokemon = (req, res) => {
   const pokemon = req.body;
@@ -126,33 +144,114 @@ exports.deletePokemon = (req, res) => {
     });
 };
 
+exports.login = async (req, res) => {
+  const { correo, clave } = req.body;
+  console.log(req.body);
+  await knex("Usuarios")
+    .select("*")
+    .where("correo", correo)
+    .then(function (data) {
+      if (data.length != 1) {
+        res.status(400).json("Usuario o contrasena incorrectos");
+      }
+      const user = data[0];
+      const validPassword = bcrypt.compareSync(clave, user.clave);
+      if (validPassword) {
+        const token = jwt.sign(
+          {
+            correo: user.correo,
+            nombre: user.nombre,
+            permisos: user.permisos,
+            date: Date.now(),
+          },
+          SECRET_KEY
+        );
+        res.status(200).json({ error: null, data: "Login exitoso", token });
+      } else {
+        return res
+          .status(400)
+          .json({ error: "Usuario o contrasena incorrectos" });
+      }
+    });
+};
+
+exports.logout = (req, res) => {
+  if (req.session) {
+    req.session.delete((err) => {
+      if (err) {
+        res.status(400).send("Unable to log out");
+      } else {
+        res.send("Logout successful");
+      }
+    });
+  } else {
+    res.end();
+  }
+};
+
+exports.register = async (req, res) => {
+  let { nombre, correo, clave, permisos } = req.body;
+  permisos = Number(permisos);
+  const salt = await bcrypt.genSaltSync(12);
+  const passHash = await bcrypt.hashSync(clave, salt);
+  knex("Usuarios")
+    .max("id")
+    .then(function (datos) {
+      knex("Usuarios")
+        .select("*")
+        .where("correo", correo)
+        .then(function (data) {
+          console.log(data);
+          if (data.length != 0) {
+            res.status(400).json({ error: "Usuario ya registrado" });
+          } else {
+            knex("Usuarios")
+              .insert({
+                id: datos[0].max + 1,
+                nombre: nombre,
+                correo: correo,
+                clave: passHash,
+                permisos: permisos,
+              })
+              .then(function (data) {
+                res.status(200).send(data);
+              });
+          }
+        });
+    });
+};
+
 exports.addTipo = (req,res) => {
+
   let tipo = req.body;
   knex("Tipos")
     .insert({
-        id: tipo.id,
-        nombre: tipo.nombre
+      id: tipo.id,
+      nombre: tipo.nombre,
     })
-    .then(() => {   
-        res.status(200).json({error: "No errors"})
+    .then(() => {
+      res.status(200).json({ error: "No errors" });
     })
-    .catch((error) => { 
-        res.status(400).json({ error: error.message })
-    })
-}
+    .catch((error) => {
+      res.status(400).json({ error: error.message });
+    });
+};
 
-exports.updateTipo = (req,res) => {
+exports.updateTipo = (req, res) => {
   let tipo = req.body;
   knex("Tipos")
     .update({
-        id: tipo.id,
-        nombre: tipo.nombre
+      id: tipo.id,
+      nombre: tipo.nombre,
     })
     .where(id, tipo.id)
-    .then(() => {   
-        res.status(200).json({error: "No errors"})
+    .then(() => {
+      res.status(200).json({ error: "No errors" });
     })
     .catch((error) => {
-        res.status(400).json({ error: error.message })
-    })
-}   
+      anyErrors = true;
+      res.status(400).json({ error: error.message });
+    });
+};
+
+
