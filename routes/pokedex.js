@@ -4,12 +4,13 @@ const router = express.Router();
 const { addTipo, updateTipo, mostrarPokemones, addPokemon, updatePokemon, deletePokemon, addTipoPokemon, addEstadisticaPokemon, updateEstadistica } = require('../controllers/pokedex')
 const { pokemonHeightValido, pokemonWeightValido, pokemonTipoValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHpValido, pokemonIdValido, pokemonNombreValido, claveValido, permisosValido, runValidate, correoValido, imagenExiste, imagenNoExiste, pokemonValidator, estadisticaValidator, tipoPokemonValidator } = require('../validators/middleware')
 const {reparseFormToBody} = require('../validators/reparsers')
+const {directorio} = require('../Utilities/directorio')
 
 //Multer
 const multer = require('multer')
 const storage = multer.diskStorage({
   destination: (req, file, cb) => { 
-    cb(null, '/') 
+    cb(null, directorio()) 
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname)

@@ -15,7 +15,7 @@ exports.is1 = (req,res,next) => {
 
 exports.imagenNoExiste = (req,res,next) => {
     console.log(req.body)   
-    req.file = req.body.Imagen
+    console.log(req.header)
     /*let path = "../Imagenes/" + req.body.get()
     if (fs.existsSync(path)) {
         res.status(400).json({ error:"Archivo ya existe"})
