@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const pokedex = require("./routes/pokedex");
+const loginSystem = require("./routes/login")
 
 require("dotenv").config();
 const app = express();
@@ -14,6 +15,7 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use("/api", pokedex);
+app.use("/api", loginSystem)
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
