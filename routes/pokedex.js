@@ -9,18 +9,18 @@ const {reparseFormToBody} = require('../validators/reparsers')
 const multer = require('multer')
 const storage = multer.diskStorage({
   destination: (req, file, cb) => { 
-    cb(null, '/SenpaiProyectoFinalBackend/Imagenes/')
+    cb(null, '/') 
   },
   filename: (req, file, cb) => {
-    cb(null, JSON.parse(req.body.Pokemon).id)
+    cb(null, file.originalname)
   },
 })  
-const upload = multer({ storage: storage })
+const upload = multer({ storage: storage })   
 
 
 
-//Routes Pokemones
-router.get("/listaPokemones", mostrarPokemones);
+//Routes Pokemones  
+router.get("/listaPokemones", mostrarPokemones);  
 router.post("/pokemon/nuevo", imagenNoExiste, upload.single('Imagen'), reparseFormToBody,pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido,runValidate, pokemonTipoValido, addPokemon);
 router.put("/pokemon/editar", pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido,runValidate, pokemonTipoValido, imagenExiste, upload.single('img'), updatePokemon);
 router.delete("/pokemon/eliminar/:id", deletePokemon);
