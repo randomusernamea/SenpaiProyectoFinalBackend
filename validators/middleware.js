@@ -15,9 +15,10 @@ exports.is1 = (req,res,next) => {
 }
 
 exports.imagenNoExiste = (req,res,next) => {
-    console.log(req)
+    //console.log(req.body)
     //FormData no acepta JSON, por eso 
     //let path = directorio + JSON.parse(req.body.Pokemon).id + ".png"
+    //console.log(path)
     //if (fs.existsSync(path)) {
     //    res.status(400).json({ error:"Archivo ya existe"})
     //  }
