@@ -66,7 +66,6 @@ exports.addPokemon = (req, res) => {
               descripcion: "pokemon.descripcion",
           })
           .then(() => {   
-              console.log("entro 3")
               res.status(200).json({ error: null, data: "Se agrego correctamente", pokemon })
           })
           .catch((error) => {

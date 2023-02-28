@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
     cb(null, directorio()) 
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    cb(null, JSON.parse(req.body.Pokemon).id+ "asd" + ".png");
   },
 
 });

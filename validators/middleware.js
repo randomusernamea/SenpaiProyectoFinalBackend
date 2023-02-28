@@ -3,6 +3,7 @@ SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
 const jwt = require("jsonwebtoken");
 const {esTipo, tipoANumero} = require("../Utilities/Utilities")
 var fs = require('fs');
+const directorio = require('../Utilities/directorio')
     
 exports.is1 = (req,res,next) => {  
     if (req.loginInfo.permisos === 1){
@@ -14,12 +15,12 @@ exports.is1 = (req,res,next) => {
 }
 
 exports.imagenNoExiste = (req,res,next) => {
-    console.log(req.body)   
-    console.log(req.header)
-    /*let path = "../Imagenes/" + req.body.get()
-    if (fs.existsSync(path)) {
-        res.status(400).json({ error:"Archivo ya existe"})
-      }*/
+    console.log(req)
+    //FormData no acepta JSON, por eso 
+    //let path = directorio + JSON.parse(req.body.Pokemon).id + ".png"
+    //if (fs.existsSync(path)) {
+    //    res.status(400).json({ error:"Archivo ya existe"})
+    //  }
     next()  
 }
 
