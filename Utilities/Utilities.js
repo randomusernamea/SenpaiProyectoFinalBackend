@@ -1,4 +1,9 @@
-        exports.esTipo = (tipo) => {
+var fs = require('fs');    
+const {directorio} = require('../Utilities/directorio')   
+       
+       
+       
+exports.esTipo = (tipo) => {
     return (tipo === "Grass" || tipo === "Poison" || tipo === "Electric" || tipo === "Normal" || tipo ==="Ghost" || tipo ==="Dragon" || tipo === "Fire" || tipo ==="Water" || tipo ==="Steel" || tipo ==="Fighting" || tipo ==="Rock" || tipo ==="Ground" || tipo === "Flying" || tipo ==="Psychic" || tipo === "Ice" || tipo ==="Dark" || tipo ==="Bug" || tipo ==="Fairy")
 };
 
@@ -42,4 +47,28 @@ exports.tipoANumero = (tipo) => {
             return 18;
         
     }
+}
+
+
+exports.moverImagen = (req) => {
+    //Mueve la imagen de la carpeta uploading con en nombre que le da el usuario
+    // a la carpeta Imagenes con el nombre pokemonid.extension
+    fs.renameSync(directorio() + "/Uploading/" + req.file.originalname, 
+    directorio() + "/Imagenes/" + req.body.id + "." +req.file.originalname.split(".")[1])
+}
+
+exports.reemplazarImagen = async (req,res) => {
+    let path = directorio() + "/Imagenes/" + req.body.idVIejo
+    try {
+        if (fs.existsSync(path + ".png")) {
+            fs.unlink(path + ".png")
+        }
+        else if (fs.existsSync(path + ".jpg")){
+            fs.unlink(path + ".jpg")
+        }
+    }
+    catch (error) {
+        res.status(400).json({error: "File deleting error"})
+    }
+    this.moverImagen(req)
 }

@@ -3,7 +3,7 @@ SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
 const jwt = require("jsonwebtoken");
 const { esTipo, tipoANumero } = require("../Utilities/Utilities");
 var fs = require("fs");
-const directorio = require("../Utilities/directorio");
+const {directorio} = require("../Utilities/directorio");
 
 exports.isAdmin = (req, res, next) => {
   if (req.loginInfo.permisos === 1) {
@@ -13,25 +13,64 @@ exports.isAdmin = (req, res, next) => {
   }
 };
 
-exports.imagenNoExiste = (req, res, next) => {
-  //FormData no acepta JSON, por eso
-  //let path = directorio + JSON.parse(req.body.Pokemon).id + ".png"
-  //if (fs.existsSync(path)) {
-  //    res.status(400).json({ error:"Archivo ya existe"})
-  //  }
-  next();
-};
+exports.imagenNoExiste = (req,res,next) => {
+    //FormData no acepta JSON, por eso viene string y hay que hacerle parse
+    const id = req.body.id;
+    let path = directorio() + "/Imagenes/" + id
+    //Se fija si existe la imagen en la carpeta imagenes
+    if (fs.existsSync(path + ".png")) {
+        res.status(400).json({ error:"Ya existe una imagen para ese pokemon y por ende, el pokemon ya existe"})
+        //Si existe la imagen se borra de la carpeta uploading
+        fs.unlink(directorio() + "/Uploading/" + req.file.originalname, (err => {
+            if (err) console.log(err);
+            else {
+              console.log("\nDeleted file: example_file.txt");
+            }
+          })
+        )
+      }
+    else {
+        if (fs.existsSync(path + ".jpg")) {
+            //Similar pero por si la imagen es in .jpg y no un .png
+            res.status(400).json({ error:"Ya existe una imagen para ese pokemon y por ende, el pokemon ya existe"})
+            fs.unlink (directorio() + "/Uploading/" + req.file.originalname, (err => {
+                if (err) console.log(err);
+                else {
+                  console.log("\nDeleted file: example_file.txt");
+                }
+              }))
+        }
+        else {
+            //Pongo en el body el path de la imagen por si se necesita despues
+            req.body.ImgPath = path
+            next()
+        }
+    }
+}
 
-exports.imagenExiste = (req, res, next) => {
-  //Arreglar Path?
-  let path = "../Imagenes/" + req.body.id;
-  //Arreglar linea
-  req.body.img.nombre = req.body.id;
-  if (!fs.existsSync(path)) {
-    res.status(400).json({ error: "Archivo ya existe" });
-  }
-  next();
-};
+exports.imagenExiste = (req,res,next) => {
+    //Arreglar Path?
+    const id = req.body.id;
+    let path = directorio() + "/Imagenes/" + id
+    console.log(req.file)
+    if (!fs.existsSync(path + ".png") && !fs.existsSync(path + ".jpg")) {
+        res.status(404).json({ error:"No existe la imagen y por ende el pokemon no existe"})
+        //Si existe la imagen se borra de la carpeta uploading
+        fs.unlink(directorio() + "/Uploading/" + req.file.originalname, (err => {
+            if (err) console.log(err);
+            else {
+                console.log("\nDeleted file: example_file.txt");
+            }
+            })
+        )
+    }
+    else {
+        //Pongo en el body el path de la imagen por si se necesita despues
+        console.log("AQUI")
+        req.body.ImgPath = path
+        next()
+    } 
+}
 
 exports.pokemonTipoValido = (req, res, next) => {
   const { tipo1, tipo2 } = req.body;

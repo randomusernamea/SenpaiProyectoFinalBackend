@@ -1,4 +1,8 @@
 node_modules
 .env
+<<<<<<< HEAD
 Utilities/directorio.js
 /
+=======
+Utilities/directorio.js
+>>>>>>> 5469f5754f6853349dce9abfc82b41a6fc8e526a
