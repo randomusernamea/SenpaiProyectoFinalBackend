@@ -2,7 +2,7 @@ const knex = require("../knexfile");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
-const {tipoANumero, moverImagen} = require("../Utilities/Utilities")
+const {tipoANumero, moverImagen, reemplazarImagen} = require("../Utilities/Utilities")
 
 exports.mostrarPokemones = (req, res) => {
   knex("Pokemones")
@@ -83,23 +83,24 @@ exports.updatePokemon = (req, res) => {
   pokemon.height = parseFloat(String(pokemon.height).slice(0, pokemon.height.length-1).replace(",","."))
   pokemon.weight = parseFloat(String(pokemon.weight).slice(0, pokemon.weight.length-2).replace(",","."))
   habilidades = pokemon.abilities.split("/");
+  reemplazarImagen(req)
   pokemon.tipos = [];
   pokemon.tipos.push(tipoANumero(pokemon.tipo1));
   if (pokemon.tipo2) {
     pokemon.tipos.push(tipoANumero(pokemon.tipo2));
   }
-
+  console.log(pokemon)
   knex("Estadisticas")
     .update({
       id: pokemon.id,
       hp: pokemon.stats.hp,
-      atk: pokemon.stats.atk,
+      atk: pokemon.stats.atk, 
       def: pokemon.stats.def,
       satk: pokemon.stats.satk,
       sdef: pokemon.stats.sdef,
       spd: pokemon.stats.spd,
     })
-    .where(id, pokemon.id)
+    .where('id', pokemon.idViejo)
     .then(() => {
       console.log("entro 2");
       knex("Pokemones")
@@ -113,7 +114,7 @@ exports.updatePokemon = (req, res) => {
           habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
           descripcion: pokemon.descripcion,
         })
-        .where(id, pokemon.id)
+        .where('id', pokemon.idViejo)
         .then(() => {
           console.log("entro 3");
           res
@@ -142,82 +143,6 @@ exports.deletePokemon = (req, res) => {
     });
 };
 
-exports.login = async (req, res) => {
-  const { correo, clave } = req.body;
-  console.log(req.body);
-  await knex("Usuarios")
-    .select("*")
-    .where("correo", correo)
-    .then(function (data) {
-      if (data.length != 1) {
-        res.status(400).json("Usuario o contrasena incorrectos");
-      }
-      const user = data[0];
-      const validPassword = bcrypt.compareSync(clave, user.clave);
-      if (validPassword) {
-        const token = jwt.sign(
-          {
-            correo: user.correo,
-            nombre: user.nombre,
-            permisos: user.permisos,
-            date: Date.now(),
-          },
-          SECRET_KEY
-        );
-        res.status(200).json({ error: null, data: "Login exitoso", token });
-      } else {
-        return res
-          .status(400)
-          .json({ error: "Usuario o contrasena incorrectos" });
-      }
-    });
-};
-
-exports.logout = (req, res) => {
-  if (req.session) {
-    req.session.delete((err) => {
-      if (err) {
-        res.status(400).send("Unable to log out");
-      } else {
-        res.send("Logout successful");
-      }
-    });
-  } else {
-    res.end();
-  }
-};
-
-exports.register = async (req, res) => {
-  let { nombre, correo, clave, permisos } = req.body;
-  permisos = Number(permisos);
-  const salt = await bcrypt.genSaltSync(12);
-  const passHash = await bcrypt.hashSync(clave, salt);
-  knex("Usuarios")
-    .max("id")
-    .then(function (datos) {
-      knex("Usuarios")
-        .select("*")
-        .where("correo", correo)
-        .then(function (data) {
-          console.log(data);
-          if (data.length != 0) {
-            res.status(400).json({ error: "Usuario ya registrado" });
-          } else {
-            knex("Usuarios")
-              .insert({
-                id: datos[0].max + 1,
-                nombre: nombre,
-                correo: correo,
-                clave: passHash,
-                permisos: permisos,
-              })
-              .then(function (data) {
-                res.status(200).send(data);
-              });
-          }
-        });
-    });
-};
 
 exports.addTipo = (req,res) => {
 
@@ -242,7 +167,7 @@ exports.updateTipo = (req, res) => {
       id: tipo.id,
       nombre: tipo.nombre,
     })
-    .where(id, tipo.id)
+    .where('id', tipo.id)
     .then(() => {
       res.status(200).json({ error: "No errors" });
     })
