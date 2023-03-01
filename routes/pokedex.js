@@ -10,10 +10,10 @@ const {directorio} = require('../Utilities/directorio')
 const multer = require("multer");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => { 
-    cb(null, directorio()) 
+    cb(null, directorio()+ "/Uploading") 
   },
   filename: (req, file, cb) => {
-    cb(null, JSON.parse(req.body.Pokemon).id+ "asd" + ".png");
+    cb(null, file.originalname);
   },
 
 });
@@ -21,8 +21,8 @@ const upload = multer({ storage: storage });
 
 //Routes Pokemones  
 router.get("/listaPokemones", mostrarPokemones);  
-router.post("/pokemon/nuevo", imagenNoExiste, upload.single('Imagen'), reparseFormToBody,pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido,runValidate, pokemonTipoValido, addPokemon);
-router.put("/pokemon/editar", pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido,runValidate, pokemonTipoValido, imagenExiste, upload.single('img'), updatePokemon);
+router.post("/pokemon/nuevo", upload.single('Imagen'),reparseFormToBody, imagenNoExiste,pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido,runValidate, pokemonTipoValido, addPokemon);
+router.put("/pokemon/editar", upload.single('imagen'), reparseFormToBody, imagenExiste, pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido,runValidate, pokemonTipoValido, updatePokemon);
 router.delete("/pokemon/eliminar/:id", deletePokemon);
 router.post("/tipos/nuevo", pokemonTipoValido, addTipo);
 router.put("/tipos/editar", pokemonTipoValido, updateTipo);
