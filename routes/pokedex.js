@@ -8,9 +8,6 @@ const {
   addPokemon,
   updatePokemon,
   deletePokemon,
-  addTipoPokemon,
-  addEstadisticaPokemon,
-  updateEstadistica,
 } = require("../controllers/pokedex");
 const {
   pokemonHeightValido,
@@ -24,15 +21,9 @@ const {
   pokemonHpValido,
   pokemonIdValido,
   pokemonNombreValido,
-  claveValido,
-  permisosValido,
   runValidate,
-  correoValido,
   imagenExiste,
   imagenNoExiste,
-  pokemonValidator,
-  estadisticaValidator,
-  tipoPokemonValidator,
   verifyToken,
   isAdmin,
 } = require("../validators/middleware");
@@ -53,8 +44,8 @@ const upload = multer({ storage: storage });
 
 //Routes Pokemones
 router.get("/listaPokemones", verifyToken, isAdmin, mostrarPokemones);
-router.post("/pokemon/nuevo", upload.single('Imagen'),reparseFormToBody, imagenNoExiste,pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido,runValidate, pokemonTipoValido, addPokemon);
-router.put("/pokemon/editar", upload.single('Imagen'), reparseFormToBody, imagenExiste, pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido,runValidate, pokemonTipoValido, updatePokemon);
+router.post("/pokemon/nuevo", upload.single('Imagen'),reparseFormToBody, imagenNoExiste,pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido, runValidate, pokemonTipoValido, addPokemon);
+router.put("/pokemon/editar", upload.single('Imagen'), reparseFormToBody, imagenExiste, pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido, runValidate, pokemonTipoValido, updatePokemon);
 
 router.delete("/pokemon/eliminar/:id", deletePokemon);
 router.post("/tipos/nuevo", pokemonTipoValido, addTipo);
