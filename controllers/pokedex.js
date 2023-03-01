@@ -2,7 +2,7 @@ const knex = require("../knexfile");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
-const {tipoANumero, moverImagen} = require("../Utilities/Utilities")
+const {tipoANumero, moverImagen, reemplazarImagen} = require("../Utilities/Utilities")
 
 exports.mostrarPokemones = (req, res) => {
   knex("Pokemones")
@@ -83,7 +83,7 @@ exports.updatePokemon = (req, res) => {
   pokemon.height = parseFloat(String(pokemon.height).slice(0, pokemon.height.length-1).replace(",","."))
   pokemon.weight = parseFloat(String(pokemon.weight).slice(0, pokemon.weight.length-2).replace(",","."))
   habilidades = pokemon.abilities.split("/");
-  moverImagen(req)
+  reemplazarImagen(req)
   pokemon.tipos = [];
   pokemon.tipos.push(tipoANumero(pokemon.tipo1));
   if (pokemon.tipo2) {
@@ -100,7 +100,7 @@ exports.updatePokemon = (req, res) => {
       sdef: pokemon.stats.sdef,
       spd: pokemon.stats.spd,
     })
-    .where('id', pokemon.id)
+    .where('id', pokemon.idViejo)
     .then(() => {
       console.log("entro 2");
       knex("Pokemones")
@@ -114,7 +114,7 @@ exports.updatePokemon = (req, res) => {
           habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
           descripcion: pokemon.descripcion,
         })
-        .where('id', pokemon.id)
+        .where('id', pokemon.idViejo)
         .then(() => {
           console.log("entro 3");
           res

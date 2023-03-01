@@ -56,3 +56,19 @@ exports.moverImagen = (req) => {
     fs.renameSync(directorio() + "/Uploading/" + req.file.originalname, 
     directorio() + "/Imagenes/" + req.body.id + "." +req.file.originalname.split(".")[1])
 }
+
+exports.reemplazarImagen = async (req,res) => {
+    let path = directorio() + "/Imagenes/" + req.body.idVIejo
+    try {
+        if (fs.existsSync(path + ".png")) {
+            fs.unlink(path + ".png")
+        }
+        else if (fs.existsSync(path + ".jpg")){
+            fs.unlink(path + ".jpg")
+        }
+    }
+    catch (error) {
+        res.status(400).json({error: "File deleting error"})
+    }
+    this.moverImagen(req)
+}
