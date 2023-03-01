@@ -2,7 +2,7 @@ const knex = require("../knexfile");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
-const {tipoANumero} = require("../Utilities/Utilities")
+const {tipoANumero, moverImagen} = require("../Utilities/Utilities")
 
 exports.mostrarPokemones = (req, res) => {
   knex("Pokemones")
@@ -33,13 +33,12 @@ exports.subirImagen = (req, res) => {
   res.status(200).json({ error: "none" });
 };
 
-exports.addPokemon = (req, res) => {
-  console.log(req.body)
+exports.addPokemon = (req, res, next) => {
   let pokemon = req.body;
   pokemon.height = parseFloat(String(pokemon.height).slice(0, pokemon.height.length-1).replace(",","."))
   pokemon.weight = parseFloat(String(pokemon.weight).slice(0, pokemon.weight.length-2).replace(",","."))
   habilidades = pokemon.abilities.split("/");
-
+  moverImagen(req)
   pokemon.tipos = []
   pokemon.tipos.push(tipoANumero(pokemon.tipo1))
   if (pokemon.tipo2) {pokemon.tipos.push(tipoANumero(pokemon.tipo2))}
