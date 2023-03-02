@@ -6,7 +6,7 @@ const {tipoANumero, moverImagen, reemplazarImagen} = require("../Utilities/Utili
 
 exports.mostrarPokemones = (req, res) => {
   knex("Pokemones")
-    .join("estadisticas", "pokemones.id", "=", "estadisticas.id")
+    .join("Estadisticas", "Pokemones.id", "Estadisticas.id")
     .then((resultado) => {
       res.status(200).json(resultado);
     })
@@ -17,7 +17,8 @@ exports.mostrarPokemones = (req, res) => {
 
 exports.mostrarPokemonId = (req, res) => {
   knex("Pokemones")
-    .join("estadisticas", "pokemones.id", "=", "estadisticas.id")
+    .where("Pokemones.id", req.params.id)
+    .join("Estadisticas", "Pokemones.id", "Estadisticas.id")
     .then((resultado) => {
       res.status(200).json(resultado);
     })
