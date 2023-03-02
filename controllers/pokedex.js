@@ -8,8 +8,7 @@ const {
 
 exports.mostrarPokemones = (req, res) => {
   knex("Pokemones")
-    .join("tipos", "pokemones.tipo_id", "=", "tipos.id")
-    .join("estadisticas", "pokemones.id", "=", "estadisticas.id")
+    .join("Estadisticas", "Pokemones.id", "Estadisticas.id")
     .then((resultado) => {
       res.status(200).json(resultado);
     })
@@ -20,13 +19,13 @@ exports.mostrarPokemones = (req, res) => {
 
 exports.mostrarPokemonId = (req, res) => {
   knex("Pokemones")
-    .where("id", Number(req.params.id))
-    .join("tipos", "pokemones.tipo_id", "=", "tipos.id")
-    .join("estadisticas", "pokemones.id", "=", "estadisticas.id")
+    .where("Pokemones.id", req.params.id)
+    .join("Estadisticas", "Pokemones.id", "Estadisticas.id")
     .then((resultado) => {
       res.status(200).json(resultado);
     })
     .catch((error) => {
+      console.log(error)
       res.status(400).json({ error: error.message });
     });
 };

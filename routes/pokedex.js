@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
+
 const { mostrarPokemones, mostrarPokemonId, addPokemon, updatePokemon, deletePokemon, addTipo, updateTipo } = require("../controllers/pokedex");
 const { pokemonHeightValido, pokemonWeightValido, pokemonTipoValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHpValido, pokemonIdValido, pokemonNombreValido, runValidate, imagenExiste, imagenNoExiste, verifyToken, isAdmin } = require("../validators/middleware");
+
 const { reparseFormToBody } = require("../validators/reparsers");
 const { directorio } = require("../Utilities/directorio");
 
@@ -18,9 +20,8 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-//Routes Pokemones
-router.get("/listaPokemones", verifyToken, isAdmin, mostrarPokemones);
-router.get("/listaPokemones/:id", mostrarPokemonId);
+router.get("/podekex", verifyToken, isAdmin, mostrarPokemones);
+router.get("/pokedex/:id", mostrarPokemonId)
 router.post("/pokemon/nuevo", upload.single("Imagen"), reparseFormToBody, imagenNoExiste, pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido, runValidate, pokemonTipoValido, addPokemon);
 router.put("/pokemon/editar", upload.single("Imagen"), reparseFormToBody, imagenExiste, pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido, runValidate, pokemonTipoValido, updatePokemon);
 router.delete("/pokemon/eliminar/:id", deletePokemon);
