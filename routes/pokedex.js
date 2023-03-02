@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
+
 const { mostrarPokemones, mostrarPokemonId, addPokemon, updatePokemon, deletePokemon, addTipo, updateTipo } = require("../controllers/pokedex");
 const { pokemonHeightValido, pokemonWeightValido, pokemonTipoValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHpValido, pokemonIdValido, pokemonNombreValido, runValidate, imagenExiste, imagenNoExiste, verifyToken, isAdmin } = require("../validators/middleware");
+
 const { reparseFormToBody } = require("../validators/reparsers");
 const { directorio } = require("../Utilities/directorio");
 
