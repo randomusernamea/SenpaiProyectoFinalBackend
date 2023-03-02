@@ -6,7 +6,6 @@ const {tipoANumero, moverImagen, reemplazarImagen} = require("../Utilities/Utili
 
 exports.mostrarPokemones = (req, res) => {
   knex("Pokemones")
-    .join("tipos", "pokemones.tipo_id", "=", "tipos.id")
     .join("estadisticas", "pokemones.id", "=", "estadisticas.id")
     .then((resultado) => {
       res.status(200).json(resultado);
@@ -19,12 +18,12 @@ exports.mostrarPokemones = (req, res) => {
 exports.mostrarPokemonId = (req, res) => {
   knex("Pokemones")
     .where("id", Number(req.params.id))
-    .join("tipos", "pokemones.tipo_id", "=", "tipos.id")
     .join("estadisticas", "pokemones.id", "=", "estadisticas.id")
     .then((resultado) => {
       res.status(200).json(resultado);
     })
     .catch((error) => {
+      console.log(error)
       res.status(400).json({ error: error.message });
     });
 };
