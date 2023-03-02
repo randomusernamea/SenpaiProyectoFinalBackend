@@ -17,7 +17,6 @@ exports.mostrarPokemones = (req, res) => {
 
 exports.mostrarPokemonId = (req, res) => {
   knex("Pokemones")
-    .where("id", Number(req.params.id))
     .join("estadisticas", "pokemones.id", "=", "estadisticas.id")
     .then((resultado) => {
       res.status(200).json(resultado);
