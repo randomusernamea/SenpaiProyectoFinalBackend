@@ -1,8 +1,10 @@
 const knex = require("../knexfile");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
-const {tipoANumero, moverImagen, reemplazarImagen} = require("../Utilities/Utilities")
+const {
+  tipoANumero,
+  moverImagen,
+  reemplazarImagen,
+} = require("../Utilities/Utilities");
 
 exports.mostrarPokemones = (req, res) => {
   knex("Pokemones")
@@ -35,72 +37,91 @@ exports.subirImagen = (req, res) => {
 
 exports.addPokemon = (req, res, next) => {
   let pokemon = req.body;
-  pokemon.height = parseFloat(String(pokemon.height).slice(0, pokemon.height.length-1).replace(",","."))
-  pokemon.weight = parseFloat(String(pokemon.weight).slice(0, pokemon.weight.length-2).replace(",","."))
+  pokemon.height = parseFloat(
+    String(pokemon.height)
+      .slice(0, pokemon.height.length - 1)
+      .replace(",", ".")
+  );
+  pokemon.weight = parseFloat(
+    String(pokemon.weight)
+      .slice(0, pokemon.weight.length - 2)
+      .replace(",", ".")
+  );
   habilidades = pokemon.abilities.split("/");
-  moverImagen(req)
-  pokemon.tipos = []
-  pokemon.tipos.push(tipoANumero(pokemon.tipo1))
-  if (pokemon.tipo2) {pokemon.tipos.push(tipoANumero(pokemon.tipo2))}
-   knex("Estadisticas")
-     .insert({
-        id: pokemon.id,
-        hp: pokemon.stats.hp,
-        atk: pokemon.stats.atk,
-        def: pokemon.stats.def,
-        satk: pokemon.stats.satk,
-        sdef: pokemon.stats.sdef,
-        spd: pokemon.stats.spd
-    })
-    .then(() => {
-      knex("Pokemones")
-          .insert({
-              id: Number(pokemon.id),
-              tipo_id: pokemon.tipos,
-              nombre: pokemon.nombre,
-              foto: "",
-              peso: pokemon.weight,
-              altura: pokemon.height,
-              habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
-              descripcion: "pokemon.descripcion",
-          })
-          .then(() => {   
-              res.status(200).json({ error: null, data: "Se agrego correctamente", pokemon })
-          })
-          .catch((error) => {
-              res.status(400).json({ error: error.message })
-          })
-    })
-    .catch((error) => {
-        console.log(error)
-        res.status(400).json("ASDASDSAD")
-    })
-}
-
-
-exports.updatePokemon = (req, res) => {
-  const pokemon = req.body;
-  pokemon.height = parseFloat(String(pokemon.height).slice(0, pokemon.height.length-1).replace(",","."))
-  pokemon.weight = parseFloat(String(pokemon.weight).slice(0, pokemon.weight.length-2).replace(",","."))
-  habilidades = pokemon.abilities.split("/");
-  reemplazarImagen(req)
+  moverImagen(req);
   pokemon.tipos = [];
   pokemon.tipos.push(tipoANumero(pokemon.tipo1));
   if (pokemon.tipo2) {
     pokemon.tipos.push(tipoANumero(pokemon.tipo2));
   }
-  console.log(pokemon)
   knex("Estadisticas")
-    .update({
+    .insert({
       id: pokemon.id,
       hp: pokemon.stats.hp,
-      atk: pokemon.stats.atk, 
+      atk: pokemon.stats.atk,
       def: pokemon.stats.def,
       satk: pokemon.stats.satk,
       sdef: pokemon.stats.sdef,
       spd: pokemon.stats.spd,
     })
-    .where('id', pokemon.idViejo)
+    .then(() => {
+      knex("Pokemones")
+        .insert({
+          id: Number(pokemon.id),
+          tipo_id: pokemon.tipos,
+          nombre: pokemon.nombre,
+          foto: "",
+          peso: pokemon.weight,
+          altura: pokemon.height,
+          habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
+          descripcion: "pokemon.descripcion",
+        })
+        .then(() => {
+          res
+            .status(200)
+            .json({ error: null, data: "Se agrego correctamente", pokemon });
+        })
+        .catch((error) => {
+          res.status(400).json({ error: error.message });
+        });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).json("ASDASDSAD");
+    });
+};
+
+exports.updatePokemon = (req, res) => {
+  const pokemon = req.body;
+  pokemon.height = parseFloat(
+    String(pokemon.height)
+      .slice(0, pokemon.height.length - 1)
+      .replace(",", ".")
+  );
+  pokemon.weight = parseFloat(
+    String(pokemon.weight)
+      .slice(0, pokemon.weight.length - 2)
+      .replace(",", ".")
+  );
+  habilidades = pokemon.abilities.split("/");
+  reemplazarImagen(req);
+  pokemon.tipos = [];
+  pokemon.tipos.push(tipoANumero(pokemon.tipo1));
+  if (pokemon.tipo2) {
+    pokemon.tipos.push(tipoANumero(pokemon.tipo2));
+  }
+  console.log(pokemon);
+  knex("Estadisticas")
+    .update({
+      id: pokemon.id,
+      hp: pokemon.stats.hp,
+      atk: pokemon.stats.atk,
+      def: pokemon.stats.def,
+      satk: pokemon.stats.satk,
+      sdef: pokemon.stats.sdef,
+      spd: pokemon.stats.spd,
+    })
+    .where("id", pokemon.idViejo)
     .then(() => {
       console.log("entro 2");
       knex("Pokemones")
@@ -114,12 +135,12 @@ exports.updatePokemon = (req, res) => {
           habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
           descripcion: pokemon.descripcion,
         })
-        .where('id', pokemon.idViejo)
+        .where("id", pokemon.idViejo)
         .then(() => {
           console.log("entro 3");
           res
-          .status(200)
-          .json({ error: null, data: "Se agrego correctamente", pokemon });
+            .status(200)
+            .json({ error: null, data: "Se agrego correctamente", pokemon });
         })
         .catch((error) => {
           res.status(400).json({ error: error.message });
@@ -143,9 +164,7 @@ exports.deletePokemon = (req, res) => {
     });
 };
 
-
-exports.addTipo = (req,res) => {
-
+exports.addTipo = (req, res) => {
   let tipo = req.body;
   knex("Tipos")
     .insert({
@@ -167,7 +186,7 @@ exports.updateTipo = (req, res) => {
       id: tipo.id,
       nombre: tipo.nombre,
     })
-    .where('id', tipo.id)
+    .where("id", tipo.id)
     .then(() => {
       res.status(200).json({ error: "No errors" });
     })
@@ -176,5 +195,3 @@ exports.updateTipo = (req, res) => {
       res.status(400).json({ error: error.message });
     });
 };
-
-
