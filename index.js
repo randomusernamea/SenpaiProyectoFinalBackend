@@ -6,7 +6,6 @@ const cors = require("cors");
 
 const pokedex = require("./routes/pokedex");
 const loginSystem = require("./routes/login")
-const imagenes = require("./routes/imagenes")
 
 require("dotenv").config();
 const app = express();
