@@ -37,7 +37,7 @@ exports.addPokemon = (req, res, next) => {
   pokemon.height = parseFloat(String(pokemon.height).slice(0, pokemon.height.length-1).replace(",","."))
   pokemon.weight = parseFloat(String(pokemon.weight).slice(0, pokemon.weight.length-2).replace(",","."))
   habilidades = pokemon.abilities.split("/");
-  moverImagen(req)
+  pokemon.foto = moverImagen(req)
   pokemon.tipos = []
   pokemon.tipos.push(tipoANumero(pokemon.tipo1))
   if (pokemon.tipo2) {pokemon.tipos.push(tipoANumero(pokemon.tipo2))}
@@ -57,7 +57,7 @@ exports.addPokemon = (req, res, next) => {
               id: Number(pokemon.id),
               tipo_id: pokemon.tipos,
               nombre: pokemon.nombre,
-              foto: "",
+              foto: pokemon.foto,
               peso: pokemon.weight,
               altura: pokemon.height,
               habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
@@ -81,14 +81,15 @@ exports.updatePokemon = (req, res) => {
   const pokemon = req.body;
   pokemon.height = parseFloat(String(pokemon.height).slice(0, pokemon.height.length-1).replace(",","."))
   pokemon.weight = parseFloat(String(pokemon.weight).slice(0, pokemon.weight.length-2).replace(",","."))
-  habilidades = pokemon.abilities.split("/");
-  reemplazarImagen(req)
+  let habilidades = pokemon.abilities.split("/");
+  reemplazarImagen(req).then((result) => {
+    pokemon.foto = result
+  })
   pokemon.tipos = [];
   pokemon.tipos.push(tipoANumero(pokemon.tipo1));
   if (pokemon.tipo2) {
     pokemon.tipos.push(tipoANumero(pokemon.tipo2));
   }
-  console.log(pokemon)
   knex("Estadisticas")
     .update({
       id: pokemon.id,
@@ -101,21 +102,19 @@ exports.updatePokemon = (req, res) => {
     })
     .where('id', pokemon.idViejo)
     .then(() => {
-      console.log("entro 2");
       knex("Pokemones")
         .update({
           id: pokemon.id,
           tipo_id: pokemon.tipos,
           nombre: pokemon.nombre,
-          foto: pokemon.img,
+          foto: pokemon.foto,
           peso: pokemon.weight,
           altura: pokemon.height,
-          habilidad: habilidades, //todo Cambiar por habilidades cuando este en la base de datos
+          habilidad: habilidades,
           descripcion: pokemon.descripcion,
         })
         .where('id', pokemon.idViejo)
         .then(() => {
-          console.log("entro 3");
           res
           .status(200)
           .json({ error: null, data: "Se agrego correctamente", pokemon });
