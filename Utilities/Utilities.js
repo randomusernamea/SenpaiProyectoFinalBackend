@@ -55,6 +55,8 @@ exports.moverImagen = (req) => {
     // a la carpeta Imagenes con el nombre pokemonid.extension
     fs.renameSync(directorio() + "/Uploading/" + req.file.originalname, 
     directorio() + "/Imagenes/" + req.body.id + "." +req.file.originalname.split(".")[1])
+    path = "localhost:3001/Imagenes/" + req.body.id + "." + req.file.originalname.split(".")[1]
+    return path
 }
 
 exports.reemplazarImagen = async (req,res) => {
@@ -70,5 +72,6 @@ exports.reemplazarImagen = async (req,res) => {
     catch (error) {
         res.status(400).json({error: "File deleting error"})
     }
-    this.moverImagen(req)
+    ruta = this.moverImagen(req)
+    return ruta
 }
