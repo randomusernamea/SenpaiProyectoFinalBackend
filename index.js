@@ -16,6 +16,7 @@ app.use(cors());
 
 app.use("/api", pokedex);
 app.use("/api", loginSystem)
+app.use("/imagenes/", express.static('imagenes'));
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
