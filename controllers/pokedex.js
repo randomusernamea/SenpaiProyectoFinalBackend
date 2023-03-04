@@ -111,28 +111,29 @@ exports.updatePokemon = (req, res) => {
   if (pokemon.tipo2) {
     pokemon.tipos.push(tipoANumero(pokemon.tipo2));
   }
-  knex("Estadisticas")
+  knex("Pokemones")
     .update({
       id: pokemon.id,
+      tipo_id: pokemon.tipos,
+      nombre: pokemon.nombre,
+      foto: pokemon.foto,
+      peso: pokemon.weight,
+      altura: pokemon.height,
+      habilidad: habilidades,
+      descripcion: pokemon.descripcion,
+      fk_estadistica: pokemon.id,
+    })
+    .where("id", pokemon.idViejo)
+    .then(() => {
+      knex("Estadisticas")
+        .update({
+          id: pokemon.id,
       hp: pokemon.stats.hp,
       atk: pokemon.stats.atk,
       def: pokemon.stats.def,
       satk: pokemon.stats.satk,
       sdef: pokemon.stats.sdef,
       spd: pokemon.stats.spd,
-    })
-    .where("id", pokemon.idViejo)
-    .then(() => {
-      knex("Pokemones")
-        .update({
-          id: pokemon.id,
-          tipo_id: pokemon.tipos,
-          nombre: pokemon.nombre,
-          foto: pokemon.foto,
-          peso: pokemon.weight,
-          altura: pokemon.height,
-          habilidad: habilidades,
-          descripcion: pokemon.descripcion,
         })
         .where("id", pokemon.idViejo)
         .then(() => {
@@ -141,6 +142,7 @@ exports.updatePokemon = (req, res) => {
             .json({ error: null, data: "Se agrego correctamente", pokemon });
         })
         .catch((error) => {
+          console.log(error)
           res.status(400).json({ error: error.message });
         });
     })
