@@ -194,7 +194,7 @@ exports.pokemonIdValido = [
   body("id")
     .exists()
     .withMessage("No hay id")
-    .isInt({ min: 0, max: 1300 })
+    .isInt({ min: 0, max: 1300, allow_leading_zeroes: false })
     .withMessage("La id tiene que ser numerica entre 0 y 1300"),
 ];
 
