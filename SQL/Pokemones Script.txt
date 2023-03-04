@@ -12,11 +12,13 @@ CREATE TABLE IF NOT EXISTS public."Pokemones"
     habilidad character varying[] COLLATE pg_catalog."default" NOT NULL,
     descripcion character varying COLLATE pg_catalog."default" NOT NULL,
     tipo_id integer[] NOT NULL,
+    fk_estadistica integer,
     CONSTRAINT "Pokemones_pkey" PRIMARY KEY (id),
-    CONSTRAINT fk_estadistica FOREIGN KEY (id)
+    CONSTRAINT fk_estadistica FOREIGN KEY (fk_estadistica)
         REFERENCES public."Estadisticas" (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
+        NOT VALID
 )
 
 TABLESPACE pg_default;

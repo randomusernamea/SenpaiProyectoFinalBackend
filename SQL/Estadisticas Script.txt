@@ -1,0 +1,20 @@
+-- Table: public.Estadisticas
+
+-- DROP TABLE IF EXISTS public."Estadisticas";
+
+CREATE TABLE IF NOT EXISTS public."Estadisticas"
+(
+    id integer NOT NULL,
+    hp integer NOT NULL,
+    atk integer NOT NULL,
+    def integer NOT NULL,
+    satk integer NOT NULL,
+    sdef integer NOT NULL,
+    spd integer NOT NULL,
+    CONSTRAINT "Estadisticas_pkey" PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Estadisticas"
+    OWNER to postgres;
