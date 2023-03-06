@@ -36,6 +36,7 @@ exports.subirImagen = (req, res) => {
 
 exports.addPokemon = (req, res, next) => {
   let pokemon = req.body;
+  pokemon.foto = moverImagen(req);
   pokemon.height = parseFloat(
     String(pokemon.height)
       .slice(0, pokemon.height.length - 1)
@@ -47,7 +48,6 @@ exports.addPokemon = (req, res, next) => {
       .replace(",", ".")
   );
   habilidades = pokemon.abilities.split("/");
-  moverImagen(req);
   pokemon.tipos = [];
   pokemon.tipos.push(tipoANumero(pokemon.tipo1));
   if (pokemon.tipo2) {
@@ -81,6 +81,7 @@ exports.addPokemon = (req, res, next) => {
             .json({ error: null, data: "Se agrego correctamente", pokemon });
         })
         .catch((error) => {
+          console.log(error)
           res.status(400).json({ error: error.message });
         });
     })
