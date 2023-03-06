@@ -27,3 +27,10 @@ exports.permisosValido = [
     .isInt()
     .withMessage("El permiso tiene que ser un entero de valor 1, 2 o 3"),
 ];
+exports.nombreValido = [
+  body("nombre")
+    .exists()
+    .withMessage("No hay nombre")
+    .isAlpha('en-US', {ignore: ' '})
+    .withMessage("El nombre solo puede contener caracteres Alpha")
+]
