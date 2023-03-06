@@ -3,7 +3,14 @@ SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
 const jwt = require("jsonwebtoken");
 
 
-exports.correoValido = [body("correo").exists().withMessage("No hay usuario").isLength({max:20}).withMessage("Correo muy largo")]
+exports.correoValido = [
+  body("correo")
+    .exists()
+    .withMessage("No hay usuario")
+    .isEmail()
+    .withMessage("El email mandado no es un email valido")
+    .isLength({max:55})
+    .withMessage("Correo muy largo")]
 
 exports.claveValido = [
   body("clave")
