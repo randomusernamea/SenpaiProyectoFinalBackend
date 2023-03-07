@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 
-const { mostrarPokemones, mostrarPokemonId, addPokemon, updatePokemon, deletePokemon, addTipo, updateTipo } = require("../controllers/pokedex");
+const { getPrev, getNext, mostrarPokemones, mostrarPokemonId, addPokemon, updatePokemon, deletePokemon, addTipo, updateTipo } = require("../controllers/pokedex");
 const { pokemonHeightValido, pokemonWeightValido, pokemonTipoValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHpValido, pokemonIdValido, pokemonNombreValido, runValidate, imagenExiste, imagenNoExiste} = require("../validators/middleware");
 const { isAdmin, verifyToken} = require("../validators/login")
 
@@ -29,5 +29,7 @@ router.get("/pokedex/:id", mostrarPokemonId)
 router.delete("/pokemon/eliminar/:id", deletePokemon);
 router.post("/tipos/nuevo", pokemonTipoValido, isAdmin, addTipo);
 router.put("/tipos/editar", pokemonTipoValido, isAdmin, updateTipo);
+router.get("/pokedex/prev/:id", getPrev)
+router.get("/pokedex/next/:id", getNext)
 
 module.exports = router;
