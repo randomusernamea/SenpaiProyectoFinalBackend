@@ -21,12 +21,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 //Routes Pokemones
-router.get("/pokedex", /*verifyToken, isAdmin,*/ mostrarPokemones);
-router.post("/pokemon/nuevo", upload.single('Imagen'),reparseFormToBody, imagenNoExiste,pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido, runValidate, pokemonTipoValido, addPokemon);
-router.put("/pokemon/editar", upload.single('Imagen'), reparseFormToBody, imagenExiste, pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido, runValidate, pokemonTipoValido, updatePokemon);
+router.get("/pokedex", mostrarPokemones);
+router.post("/pokemon/nuevo", upload.single('Imagen'),reparseFormToBody, isAdmin, imagenNoExiste,pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido, runValidate, pokemonTipoValido, addPokemon);
+router.put("/pokemon/editar", upload.single('Imagen'), reparseFormToBody, isAdmin ,imagenExiste, pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido, runValidate, pokemonTipoValido, updatePokemon);
 router.get("/pokedex/:id", mostrarPokemonId)
 router.delete("/pokemon/eliminar/:id", deletePokemon);
-router.post("/tipos/nuevo", pokemonTipoValido, addTipo);
-router.put("/tipos/editar", pokemonTipoValido, updateTipo);
+router.post("/tipos/nuevo", pokemonTipoValido, isAdmin, addTipo);
+router.put("/tipos/editar", pokemonTipoValido, isAdmin, updateTipo);
 
 module.exports = router;
