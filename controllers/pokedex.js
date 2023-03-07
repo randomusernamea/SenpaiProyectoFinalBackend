@@ -6,6 +6,52 @@ const {
   reemplazarImagen,
 } = require("../Utilities/Utilities");
 
+
+exports.getPrev = (req,res) => {
+  knex("Pokemones")
+    .max("id")
+    .where("id", "<" ,req.params.id)
+    .then((resultado) => {
+      if (resultado[0].max != null ){
+        res.status(200).json(resultado)
+      }
+      else {
+        knex("Pokemones")
+          .max("id")
+          .then((resultado) => {
+            res.status(200).json(resultado)
+          })
+      }
+      
+    })
+    .catch((error) => {
+      console.log(error)
+      res.status(400)
+    })
+}
+exports.getNext = (req,res) => {
+  knex("Pokemones")
+  .min("id")
+  .where("id", ">" ,req.params.id)
+  .then((resultado) => {
+    if (resultado[0].min != null ){
+      res.status(200).json(resultado)
+    }
+    else {
+      knex("Pokemones")
+        .min("id")
+        .then((resultado) => {
+          res.status(200).json(resultado)
+        })
+    }
+    
+  })
+  .catch((error) => {
+    console.log(error)
+    res.status(400)
+  })
+}
+
 exports.mostrarPokemones = (req, res) => {
   knex("Pokemones")
     .join("Estadisticas", "Pokemones.id", "Estadisticas.id")
