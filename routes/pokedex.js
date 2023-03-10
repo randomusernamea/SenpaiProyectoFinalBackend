@@ -27,8 +27,8 @@ router.post("/pokemon/nuevo", upload.single('Imagen'),reparseFormToBody, verifyT
 router.put("/pokemon/editar", upload.single('Imagen'), reparseFormToBody, verifyToken, isAdmin ,imagenExiste, pokemonNombreValido, pokemonIdValido, pokemonHpValido, pokemonAtkValido, pokemonDefValido, pokemonSpdValido, pokemonSatkValido, pokemonSdefValido, pokemonHeightValido, pokemonWeightValido, runValidate, pokemonTipoValido, updatePokemon);
 router.get("/pokedex/:id", mostrarPokemonId)
 router.delete("/pokemon/eliminar/:id", deletePokemon);
-router.post("/tipos/nuevo", pokemonTipoValido, isAdmin, addTipo);
-router.put("/tipos/editar", pokemonTipoValido, isAdmin, updateTipo);
+router.post("/tipos/nuevo", pokemonTipoValido, verifyToken, isAdmin, addTipo);
+router.put("/tipos/editar", pokemonTipoValido, verifyToken, isAdmin, updateTipo);
 router.get("/pokedex/prev/:id", getPrev)
 router.get("/pokedex/next/:id", getNext)
 
