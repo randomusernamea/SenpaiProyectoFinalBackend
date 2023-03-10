@@ -21,7 +21,6 @@ exports.verifyToken = (req, res, next) => {
 };
 
 exports.isAdmin = (req, res, next) => {
-  verifyToken();
   if (req.loginInfo.permisos === 1) {
     next();
   } else {
