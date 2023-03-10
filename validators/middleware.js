@@ -50,7 +50,6 @@ exports.imagenExiste = (req,res,next) => {
     let path = directorio() + "/Imagenes/" + id
     if (!fs.existsSync(path + ".png") && !fs.existsSync(path + ".jpg")) {
         res.status(404).json({ error:"No existe la imagen y por ende el pokemon no existe"})
-        console.log("Aqui 2")
         //Si existe la imagen se borra de la carpeta uploading
         fs.unlink(directorio() + "/Uploading/" + req.file.originalname, (err => {
             if (err) console.log(err);
@@ -62,7 +61,6 @@ exports.imagenExiste = (req,res,next) => {
     }
     else {
         //Pongo en el body el path de la imagen por si se necesita despues
-        console.log("AQUI")
         req.body.ImgPath = path
         next()
     } 
