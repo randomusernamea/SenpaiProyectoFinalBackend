@@ -5,6 +5,8 @@ const {
   moverImagen,
   reemplazarImagen,
 } = require("../Utilities/Utilities");
+const { directorio } = require("../Utilities/directorio");
+var fs = require("fs");
 
 
 exports.getPrev = (req,res) => {
@@ -55,6 +57,7 @@ exports.getNext = (req,res) => {
 exports.mostrarPokemones = (req, res) => {
   knex("Pokemones")
     .join("Estadisticas", "Pokemones.id", "Estadisticas.id")
+    .orderBy('Pokemones.id', "ASC")
     .then((resultado) => {
       res.status(200).json(resultado);
     })
@@ -202,9 +205,35 @@ exports.updatePokemon = (req, res) => {
 exports.deletePokemon = (req, res) => {
   knex("Pokemones")
     .where("id", Number(req.params.id))
-    .del()
+    .delete()
     .then(() => {
-      res.status(200).json({ message: "borrado correctamente" });
+      knex("Estadisticas")
+        .where("id", Number(req.params.id))
+        .delete()
+        .then(()=>{
+          path = directorio() + "/Imagenes/" + req.params.id
+          if (fs.existsSync(path + ".png")){
+            fs.unlink(path + ".png", (err) => {
+              if (err) console.log(err);
+              else {
+                console.log("\nDeleted file: example_file.txt");
+              }
+            })
+          }else
+          if (fs.existsSync(path + "jpg", (err) => {
+            if (err) console.log(err);
+            else {
+              console.log("\nDeleted file: example_file.txt");
+            }
+          })){
+            fs.unlink(path + ".jpg")
+            res.status(200).json({message: "Pokemon borrado correctamente"})
+          }else {
+            res.status(404).json({ message: "Imagen no encontrada, pero borrado de la base de datos." });
+          }
+          
+        })
+      
     })
     .catch((error) => {
       res.status(400).json({ error: error.message });

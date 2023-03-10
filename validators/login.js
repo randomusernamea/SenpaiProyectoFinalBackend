@@ -13,8 +13,9 @@ exports.verifyToken = (req, res, next) => {
     req.loginInfo = verified;
     if (verified.date < Date.now() - 5 * 60 * 1000) {
       res.status(401).json({ error: "Token expirado" });
+    }else {
+      next();
     }
-    next();
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
