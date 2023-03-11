@@ -1,0 +1,18 @@
+-- Table: public.Usuarios
+
+-- DROP TABLE IF EXISTS public."Usuarios";
+
+CREATE TABLE IF NOT EXISTS public."Usuarios"
+(
+    id integer NOT NULL,
+    nombre character varying COLLATE pg_catalog."default" NOT NULL,
+    correo character varying COLLATE pg_catalog."default" NOT NULL,
+    clave character varying COLLATE pg_catalog."default" NOT NULL,
+    permisos integer NOT NULL,
+    CONSTRAINT "Usuarios_pkey" PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Usuarios"
+    OWNER to postgres;

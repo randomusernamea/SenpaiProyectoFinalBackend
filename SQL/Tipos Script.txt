@@ -1,0 +1,15 @@
+-- Table: public.Tipos
+
+-- DROP TABLE IF EXISTS public."Tipos";
+
+CREATE TABLE IF NOT EXISTS public."Tipos"
+(
+    id integer NOT NULL,
+    nombre character varying COLLATE pg_catalog."default",
+    CONSTRAINT "Tipos_pkey" PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Tipos"
+    OWNER to postgres;
