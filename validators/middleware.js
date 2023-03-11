@@ -7,7 +7,6 @@ const { directorio } = require("../Utilities/directorio");
 
 
 exports.imagenNoExiste = (req, res, next) => {
-  //FormData no acepta JSON, por eso viene string y hay que hacerle parse
   const id = req.body.id;
   let path = directorio() + "/Imagenes/" + id;
   //Se fija si existe la imagen en la carpeta imagenes
@@ -25,7 +24,7 @@ exports.imagenNoExiste = (req, res, next) => {
     });
   } else {
     if (fs.existsSync(path + ".jpg")) {
-      //Similar pero por si la imagen es in .jpg y no un .png
+      //Similar pero por si la imagen es un .jpg y no un .png
       res.status(400).json({
         error:
           "Ya existe una imagen para ese pokemon y por ende, el pokemon ya existe",
@@ -45,9 +44,9 @@ exports.imagenNoExiste = (req, res, next) => {
 };
 
 exports.imagenExiste = (req,res,next) => {
-    //Arreglar Path?
     const id = req.body.idViejo;
     let path = directorio() + "/Imagenes/" + id
+    //Si no existe la imagen regresa 404
     if (!fs.existsSync(path + ".png") && !fs.existsSync(path + ".jpg")) {
         res.status(404).json({ error:"No existe la imagen y por ende el pokemon no existe"})
         //Si existe la imagen se borra de la carpeta uploading
@@ -67,6 +66,7 @@ exports.imagenExiste = (req,res,next) => {
 }
 
 exports.pokemonTipoValido = (req, res, next) => {
+  //Se fija si los tipos son validos o no
   const { tipo1, tipo2 } = req.body;
   if (!esTipo(tipo1) || (tipo2 && !esTipo(tipo2))) {
     res.status(400).send("Tipos invalidos");
@@ -74,6 +74,7 @@ exports.pokemonTipoValido = (req, res, next) => {
   next();
 };
 
+//No se usa
 exports.pokemonValidator = (req, res, next) => {};
 
 
@@ -122,7 +123,7 @@ exports.pokemonNombreValido = [
     .withMessage("Nombre muy largo"),
 ];
 
-//Needs testing
+//Se fija que height sea del formato numero , digito m, e.g. 172,4m
 exports.pokemonHeightValido = [
   body("height")
     .exists()
@@ -133,7 +134,7 @@ exports.pokemonHeightValido = [
     ),
 ];
 
-//Needs testing
+//Se fija que weight sea del formato numero , digito kg, e.g. 931,5kg
 exports.pokemonWeightValido = [
   body("weight")
     .exists()
