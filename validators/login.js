@@ -6,11 +6,14 @@ const jwt = require("jsonwebtoken");
 exports.verifyToken = (req, res, next) => {
   const token = req.header("Authorization");
   if (!token) {
+    //Si el token no existe lo rechazo
     return res.status(401).json({ error: "Acceso denegado" });
   }
   try {
     const verified = jwt.verify(token, SECRET_KEY);
+    //Me guardo la informacion del token en req.loginInfo
     req.loginInfo = verified;
+    //Si el token es viejo (mas de 5m) lo rechazo
     if (verified.date < Date.now() - 5 * 60 * 1000) {
       res.status(401).json({ error: "Token expirado" });
     }else {
@@ -22,6 +25,7 @@ exports.verifyToken = (req, res, next) => {
 };
 
 exports.isAdmin = (req, res, next) => {
+  //Permisos 1 es que es administrador, por ahora la aplicacion asigna que cualquier persona sea administrador
   if (req.loginInfo.permisos === 1) {
     next();
   } else {

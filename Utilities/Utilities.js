@@ -4,10 +4,12 @@ const {directorio} = require('../Utilities/directorio')
        
        
 exports.esTipo = (tipo) => {
+    //Esta funcion regresa true si el tipo es un tipo valido, sino regresa false
     return (tipo === "Grass" || tipo === "Poison" || tipo === "Electric" || tipo === "Normal" || tipo ==="Ghost" || tipo ==="Dragon" || tipo === "Fire" || tipo ==="Water" || tipo ==="Steel" || tipo ==="Fighting" || tipo ==="Rock" || tipo ==="Ground" || tipo === "Flying" || tipo ==="Psychic" || tipo === "Ice" || tipo ==="Dark" || tipo ==="Bug" || tipo ==="Fairy")
 };
 
 exports.tipoANumero = (tipo) => {
+    //Convierte el tipo a un string a numero usable por la base de datos
     switch (tipo) {
         case ("Normal"):
             return 1;
@@ -60,11 +62,14 @@ exports.moverImagen = (req) => {
 }
 
 exports.reemplazarImagen = async (req,res) => {
+    //Calculo en donde esta la imagen a reemplazar
     let path = directorio() + "/Imagenes/" + req.body.idVIejo
     try {
+        //Me fijo si existe como .png, y si existe la borro
         if (fs.existsSync(path + ".png")) {
             fs.unlink(path + ".png")
         }
+        //Me fijo si existe como .jpg, y si existe la borro
         else if (fs.existsSync(path + ".jpg")){
             fs.unlink(path + ".jpg")
         }
@@ -72,6 +77,7 @@ exports.reemplazarImagen = async (req,res) => {
     catch (error) {
         res.status(400).json({error: "File deleting error"})
     }
+    //Muevo la imagen nueva
     ruta = this.moverImagen(req)
     return ruta
 }

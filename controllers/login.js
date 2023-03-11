@@ -6,11 +6,14 @@ SECRET_KEY = "IENB(#HYie-igh*)Ihtgq10b";
 exports.register = async (req, res) => {
   let { nombre, correo, clave, permisos } = req.body;
   permisos = Number(permisos);
+  //Cambio el password por un hash de Bcrypt
   const salt = bcrypt.genSaltSync(12);
   const passHash = bcrypt.hashSync(clave, salt);
+  //Tomo el usuario con el id mas grande, agrego el usuario nuevo con el id mas grande +1.
   knex("Usuarios")
     .max("id")
     .then(function (datos) {
+      //Si existe el correo que no lo registre.
       knex("Usuarios")
         .select("*")
         .where("correo", correo)
@@ -42,11 +45,13 @@ exports.login = async (req, res) => {
     .select("*")
     .where("correo", correo)
     .then(function (data) {
+      //Si no encuentra el correo regresa error
       if (data.length != 1) {
         res.status(400).json("Usuario o contrasena incorrectos");
       }
       const user = data[0];
       const validPassword = bcrypt.compareSync(clave, user.clave);
+      //Si el hash se pudo generar con esa contrasenia loguea
       if (validPassword) {
         const token = jwt.sign(
           {
@@ -66,6 +71,8 @@ exports.login = async (req, res) => {
     });
 };
 
+
+//
 exports.logout = (req, res) => {
   if (req.session) {
     req.session.delete((err) => {
